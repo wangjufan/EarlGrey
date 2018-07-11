@@ -13,17 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <EarlGrey/GREYProvider.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
 /** 默认返回所有的应用窗口，或是返回自定义的窗口
  *  A provider for UIApplication windows. By default, all application windows are returned unless
  *  this provider is initialized with custom windows.
  */
 @interface GREYUIWindowProvider : NSObject<GREYProvider>
-
 /**
  *  Class method to get a provider with the specified @c windows.
  *
@@ -32,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return A GREYUIWindowProvider instance populated with the UIApplication windows in @c windows.
  */
 + (instancetype)providerWithWindows:(NSArray *)windows;
-
 /**
  *  Class method to get a provider with all the windows currently registed with the app.
  *
@@ -40,12 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
  *          registered with the app.
  */
 + (instancetype)providerWithAllWindows;
-
 /**
  *  @remark init is not an available initializer. Use the other initializers.
  */
 - (instancetype)init NS_UNAVAILABLE;
-
 /**
  *  Designated Initializer.
  *
@@ -70,13 +63,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray *)allWindows;
 
 #pragma mark - GREYProvider
-
 /**
  *
  *  @return An enumerator for @c windows populating the window provider.
  */
 - (NSEnumerator *)dataEnumerator;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

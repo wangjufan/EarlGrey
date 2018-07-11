@@ -13,18 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <Foundation/Foundation.h>
-
 #import <EarlGrey/GREYProvider.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A provider for UI elements.
  */
 @interface GREYElementProvider : NSObject<GREYProvider>
-
 /**
  *  Class method to initialize this provider with the specified @c elements.
  *
@@ -51,7 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
  *          provider and their entire hierarchy.
  */
 + (instancetype)providerWithRootProvider:(id<GREYProvider>)rootProvider;
-
 /**
  *  @remark init is not an available initializer. Use the other initializers.
  */
@@ -83,16 +78,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithRootProvider:(id<GREYProvider>)rootProvider;
 
-
 /**
  *  Designated Initializer. Must provide exactly one @c non-nil parameter out of
  *  all the accepted parameters.
- *
- *  @param rootProvider A provider for root elements. The root elements and their entire hierarchy
- *                      will populate the current provider.
- *  @param rootElements An array of root elements whose entire hierarchy will populate the provider.
+ *  @param rootProvider A provider for root elements.
+ *                       The root elements and ---- their entire hierarchy will populate the current provider.
+ *  @param rootElements An array of root elements ---- whose entire hierarchy will populate the provider.
  *  @param elements     An array of elements that will populate the provider.
- *
  *  @return A GREYElementProviderInstance, initialized with at least one of the specified
  *          parameters.
  */
@@ -101,12 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
                           orElements:(NSArray *_Nullable)elements NS_DESIGNATED_INITIALIZER;
 
 #pragma mark - GREYProvider
-
 /**
  *  @return An enumerator for the elements in the provider.
  */
 - (NSEnumerator *)dataEnumerator;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

@@ -32,7 +32,6 @@
 + (instancetype)providerWithAllWindows {
   return [[GREYUIWindowProvider alloc] initWithAllWindows];
 }
-
 - (instancetype)initWithWindows:(NSArray *)windows {
   self = [super init];
   if (self) {
@@ -43,6 +42,7 @@
 - (instancetype)initWithAllWindows {
   return [self initWithWindows:nil];
 }
+
 - (NSEnumerator *)dataEnumerator {
   GREYFatalAssertMainThread();
 

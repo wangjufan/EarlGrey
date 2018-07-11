@@ -23,11 +23,9 @@
   id(^_nextObjectBlock)(id);
   id _userInfo;
 }
-
 - (instancetype)initWithUserInfo:(id)userInfo
                 block:(id(^)(id))nextObjectBlock {
   GREYThrowOnNilParameter(nextObjectBlock);
-
   self = [super init];
   if (self) {
     _nextObjectBlock = nextObjectBlock;
@@ -35,13 +33,10 @@
   }
   return self;
 }
-
 #pragma mark - NSEnumerator
-
 - (id)nextObject {
   return _nextObjectBlock(_userInfo);
 }
-
 - (NSArray *)allObjects {
   NSMutableArray *remainingObjects = [[NSMutableArray alloc] init];
   id object;
@@ -57,5 +52,4 @@
   }
   return [NSArray arrayWithArray:remainingObjects];
 }
-
 @end

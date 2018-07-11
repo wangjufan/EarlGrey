@@ -696,8 +696,8 @@
 		FD1000EA1C5B466F00B2DB0A /* EarlGrey */ = {
 			isa = PBXGroup;
 			children = (
-				FD1001861C5B46C200B2DB0A /* Matcher */,
 				FD1001931C5B46C200B2DB0A /* Provider */,
+				FD1001861C5B46C200B2DB0A /* Matcher */,
 				FD1001001C5B46C100B2DB0A /* Action */,
 				FD10014D1C5B46C200B2DB0A /* Assertion */,
 				FD1001671C5B46C200B2DB0A /* Core */,
@@ -830,13 +830,11 @@
 			children = (
 				C5EFB1FE20117AF00010D067 /* EarlGreyImpl.h */,
 				C5EFB1FF20117AF00010D067 /* EarlGreyImpl.m */,
-				FD10016D1C5B46C200B2DB0A /* GREYInteractionDataSource.h */,
 				FD10016C1C5B46C200B2DB0A /* GREYInteraction.h */,
+				FD10016D1C5B46C200B2DB0A /* GREYInteractionDataSource.h */,
 				FD10016A1C5B46C200B2DB0A /* GREYElementInteraction.h */,
 				FD10016B1C5B46C200B2DB0A /* GREYElementInteraction.m */,
 				FDCB29841E2465A20001557E /* GREYElementInteraction+Internal.h */,
-				FD1001681C5B46C200B2DB0A /* GREYElementFinder.h */,
-				FD1001691C5B46C200B2DB0A /* GREYElementFinder.m */,
 			);
 			name = Core;
 			path = EarlGrey/Core;
@@ -918,6 +916,8 @@
 		FD1001931C5B46C200B2DB0A /* Provider */ = {
 			isa = PBXGroup;
 			children = (
+				FD1001681C5B46C200B2DB0A /* GREYElementFinder.h */,
+				FD1001691C5B46C200B2DB0A /* GREYElementFinder.m */,
 				3F5122091EE1CF2B0000CC56 /* Traversal */,
 				FD1001941C5B46C200B2DB0A /* GREYDataEnumerator.h */,
 				FD1001951C5B46C200B2DB0A /* GREYDataEnumerator.m */,

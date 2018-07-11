@@ -17,22 +17,17 @@
 #import <Foundation/Foundation.h>
 
 @protocol GREYMatcher, GREYProvider;
-
 // 查找器与提供器 组合
-
 NS_ASSUME_NONNULL_BEGIN
-
 /** Extractor would be more suitable !!! 查询器是不适当的，提取器更适合。
  *  Finds UI elements in GREYProvider that are accepted by a matcher.
  */
 @interface GREYElementFinder : NSObject
-
 /**
  *  The matcher the element finder is initialized with. Objects returned from this class
  *  must match this matcher.
  */
 @property(nonatomic, readonly) id<GREYMatcher> matcher;
-
 /**
  *  @remark init is not an available initializer. Use the other initializers.
  */
@@ -44,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return An instance of GREYElementFinder, initialized with a matcher.
  */
 - (instancetype)initWithMatcher:(id<GREYMatcher>)matcher NS_DESIGNATED_INITIALIZER;
-
 /**
  *  Performs a search on elements provided by @c elementProvider and returns all the elements
  *  that are accepted by the matcher this object is initialized with.
@@ -55,8 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
  *          The relative order of the elements is preserved when returned.
  */
 - (NSArray *)elementsMatchedInProvider:(id<GREYProvider>)elementProvider;
-
 @end
-
 NS_ASSUME_NONNULL_END
 

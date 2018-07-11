@@ -34,11 +34,9 @@
 + (instancetype)providerWithElements:(NSArray *)elements {
   return [[GREYElementProvider alloc] initWithElements:elements];
 }
-
 + (instancetype)providerWithRootElements:(NSArray *)rootElements {
   return [[GREYElementProvider alloc] initWithRootElements:rootElements];
 }
-
 + (instancetype)providerWithRootProvider:(id<GREYProvider>)rootProvider {
   return [[GREYElementProvider alloc] initWithRootProvider:rootProvider];
 }
@@ -46,11 +44,9 @@
 - (instancetype)initWithElements:(NSArray *)elements {
   return [self initWithRootProvider:nil orRootElements:nil orElements:elements];
 }
-
 - (instancetype)initWithRootElements:(NSArray *)rootElements {
   return [self initWithRootProvider:nil orRootElements:rootElements orElements:nil];
 }
-
 - (instancetype)initWithRootProvider:(id<GREYProvider>)rootProvider {
   return [self initWithRootProvider:rootProvider orRootElements:nil orElements:nil];
 }
@@ -58,7 +54,6 @@
 - (instancetype)initWithRootProvider:(id<GREYProvider>)rootProvider
                       orRootElements:(NSArray *)rootElements
                           orElements:(NSArray *)elements {
-    
   GREYFatalAssertWithMessage((rootProvider && !rootElements && !elements)
                     || (!rootProvider && rootElements && !elements)
                     || (!rootProvider && !rootElements && elements),
@@ -74,10 +69,8 @@
 }
 
 #pragma mark - GREYProvider
-
 - (NSEnumerator *)dataEnumerator {
   GREYFatalAssertMainThread();
-
   NSEnumerator *enumerator;
   if (_rootElements) {
     enumerator = [_rootElements objectEnumerator];
@@ -89,23 +82,20 @@
 
   NSObject *userInfo = [[NSObject alloc] init];
   return [[GREYDataEnumerator alloc] initWithUserInfo:userInfo block:^id(NSObject *userinfo) {
-    
+   
     GREYTraversalBFS *traversal = objc_getAssociatedObject(userInfo, @selector(dataEnumerator));
     id objToReturn = [traversal nextObject];
-      
-    if (!objToReturn) {
-      id nextElement = [enumerator nextObject];
-      if (nextElement) {
-        // The GREYTraversalBFS object does all the hierarchy unrolling. In other words, the element
-        // provider relies on the GREYTraversalBFS object for its needs.
-        traversal = [GREYTraversalBFS hierarchyForElementWithBFSTraversal:nextElement];
-        objc_setAssociatedObject(userInfo,
-                        @selector(dataEnumerator),
-                        traversal,
-                        OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        objToReturn = [traversal nextObject];
+    
+      if (!objToReturn) {
+          id nextElement = [enumerator nextObject];
+          if (nextElement) {
+              // The GREYTraversalBFS object does all the hierarchy unrolling. In other words, the element
+              // provider relies on the GREYTraversalBFS object for its needs.
+              traversal = [GREYTraversalBFS hierarchyForElementWithBFSTraversal:nextElement];
+              objc_setAssociatedObject(userInfo, @selector(dataEnumerator), traversal, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+              objToReturn = [traversal nextObject];
+          }
       }
-    }
     return objToReturn;
   }];
 }
