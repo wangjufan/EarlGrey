@@ -108,7 +108,6 @@ GREY_EXTERN NSString *const kGREYActionErrorUserInfoKey;
  *  User Info dictionary key for the assertion checked.
  */
 GREY_EXTERN NSString *const kGREYAssertionUserInfoKey;
-
 /**
  *  User Info dictionary key for the element an assertion was checked on. The element for an
  *  assertion can be @c nil since assertions can be performed on @c nil elements.
@@ -124,7 +123,6 @@ GREY_EXTERN NSString *const kGREYAssertionErrorUserInfoKey;
  *  Represents an interaction with a UI element.
  */
 @protocol GREYInteraction<NSObject>
-
 /**
  *  Data source for providing UI elements to interact with.
  *  The dataSource must adopt GREYInteractionDataSource protocol and a weak reference is held.
@@ -142,7 +140,6 @@ GREY_EXTERN NSString *const kGREYAssertionErrorUserInfoKey;
  *  @return The provided GREYInteraction instance, with an appropriate rootMatcher.
  */
 - (instancetype)inRoot:(id<GREYMatcher>)rootMatcher;
-
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
@@ -193,10 +190,9 @@ GREY_EXTERN NSString *const kGREYAssertionErrorUserInfoKey;
 - (instancetype)performAction:(id<GREYAction>)action
             error:(__strong NSError *_Nullable *_Nullable)errorOrNil
                         NS_SWIFT_NOTHROW NS_REFINED_FOR_SWIFT;
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 /**
  *  In case of multiple matches, selects the element at the specified index.
  *  In case of the index being over the number of matched elements, it throws an exception.
@@ -216,10 +212,9 @@ GREY_EXTERN NSString *const kGREYAssertionErrorUserInfoKey;
  *          specified index in the list of matched elements.
  */
 - (instancetype)atIndex:(NSUInteger)index;
-
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 /**
  *  Performs an @c assertion on the selected UI element.
  *  @param assertion The assertion to be performed on the @c element.
@@ -237,7 +232,6 @@ GREY_EXTERN NSString *const kGREYAssertionErrorUserInfoKey;
  */
 - (instancetype)assert:(id<GREYAssertion>)assertion
         error:(__strong NSError *_Nullable *_Nullable)errorOrNil NS_SWIFT_NOTHROW;
-
 /**
  *  Performs an assertion that evaluates @c matcher on the selected UI element.
  *

@@ -37,7 +37,6 @@
 
 - (instancetype)initWithName:(NSString *)name constraints:(id<GREYMatcher>)constraints {
   GREYThrowOnNilParameter(name);
-
   self = [super init];
   if (self) {
     _name = [name copy];
@@ -45,8 +44,8 @@
   }
   return self;
 }
-
-- (BOOL)satisfiesConstraintsForElement:(id)element error:(__strong NSError **)errorOrNil {
+- (BOOL)satisfiesConstraintsForElement:(id)element
+                        error:(__strong NSError **)errorOrNil {
   if (!_constraints
      || !GREY_CONFIG_BOOL(kGREYConfigKeyActionConstraintsEnabled)) {
     return YES;
@@ -54,19 +53,16 @@
     GREYStringDescription *mismatchDetail = [[GREYStringDescription alloc] init];
     if (![_constraints matches:element describingMismatchTo:mismatchDetail]) {
       NSMutableDictionary *errorDetails = [[NSMutableDictionary alloc] init];
-
       errorDetails[kErrorDetailActionNameKey] = _name;
       errorDetails[kErrorDetailElementDescriptionKey] = [element grey_description];
       errorDetails[kErrorDetailConstraintRequirementKey] = mismatchDetail;
       errorDetails[kErrorDetailConstraintDetailsKey] = [_constraints description];
       errorDetails[kErrorDetailRecoverySuggestionKey] =
           @"Adjust element properties so that it matches the failed constraint(s).";
-
       GREYError *error = GREYErrorMake(kGREYInteractionErrorDomain,
-                                       kGREYInteractionConstraintsFailedErrorCode,
-                                       @"Cannot perform action due to constraint(s) failure.");
+                            kGREYInteractionConstraintsFailedErrorCode,
+                            @"Cannot perform action due to constraint(s) failure.");
       error.errorInfo = errorDetails;
-
       if (errorOrNil) {
         *errorOrNil = error;
       } else {
@@ -75,17 +71,14 @@
                                kErrorDetailElementDescriptionKey,
                                kErrorDetailConstraintDetailsKey,
                                kErrorDetailRecoverySuggestionKey ];
-
         NSString *reasonDetail = [GREYObjectFormatter formatDictionary:errorDetails
                                                                 indent:2
                                                              hideEmpty:YES
                                                               keyOrder:keyOrder];
-
         NSString *reason = [NSString stringWithFormat:@"Cannot perform action due to "
                                                       @"constraint(s) failure.\n"
                                                       @"Exception with Action: %@\n",
                                                       reasonDetail];
-
         I_GREYActionFail(reason, @"");
       }
       return NO;
@@ -93,17 +86,14 @@
     return YES;
   }
 }
-
 #pragma mark - GREYAction
-
 // The perform:error: method has to be implemented by the subclass.
 - (BOOL)perform:(id)element error:(__strong NSError **)errorOrNil {
   [self doesNotRecognizeSelector:_cmd];
   return NO;
 }
-
 - (NSString *)name {
   return _name;
 }
-
 @end
+

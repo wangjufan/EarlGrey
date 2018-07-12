@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol GREYInteractionDataSource<NSObject>
 /**
  *  The root element provider for an interaction.
- *  The entire hierarchies starting from the root
- *  elements are searched to find the right element to interact with.
+ *  The entire hierarchies --- starting from the root elements ----
+ *  are searched to find the right element to interact with.
  *  @return A GREYProvider instance providing data for the interaction.
  */
 - (id<GREYProvider>)rootElementProvider;

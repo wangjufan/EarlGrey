@@ -42,19 +42,16 @@ NSString *const kGREYUIThreadExecutorErrorDomain =
  *  The value used here has worked in practice and has negligible impact on performance.
  */
 static const int kConsecutiveTimesIdlingResourcesMustBeIdle = 3;
-
 /**
  *  The default maximum time that the main thread is allowed to sleep while the thread executor is
  *  attempting to synchronize.
  */
 static const CFTimeInterval kMaximumSynchronizationSleepInterval = 0.1;
-
 /**
  *  The maximum amount of time to wait for the UI and idling resources to become idle in
  *  grey_forcedStateTrackerCleanUp before forcefully clearing the state of GREYAppStateTracker.
  */
 static const CFTimeInterval kDrainTimeoutSecondsBeforeForcedStateTrackerCleanup = 10;
-
 // Execution states.
 typedef NS_ENUM(NSInteger, GREYExecutionState) {
   kGREYExecutionNotStarted = -1,
@@ -63,6 +60,7 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
   kGREYExecutionTimeoutIdlingResourcesAreBusy,
   kGREYExecutionTimeoutAppIsBusy,
 };
+
 
 @interface GREYUIThreadExecutor ()
 
@@ -126,19 +124,21 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
     // This prevents the next test case from timing out in case the previous one puts the app into
     // a non-idle state.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(grey_forcedStateTrackerCleanUp)
-                                                 name:kGREYXCTestCaseInstanceDidTearDown
-                                               object:nil];
+                            selector:@selector(grey_forcedStateTrackerCleanUp)
+                            name:kGREYXCTestCaseInstanceDidTearDown
+                            object:nil];
   }
   return self;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 - (void)drainOnce {
   // Drain the active run loop once. Do not allow the run loop to sleep.
   GREYRunLoopSpinner *runLoopSpinner = [[GREYRunLoopSpinner alloc] init];
-
   // Spin the run loop with an always true stop condition. The spinner will only drain the run loop
-  // for its minimum number of drains before checking this condition and returning.
+  // for its --- minimum number of drains ---- before checking this condition and returning.
   [runLoopSpinner spinWithStopConditionBlock:^BOOL {
     return YES;
   }];
@@ -164,37 +164,6 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
   }];
   [stopwatch stop];
   GREYLogVerbose(@"Active Run Loop was drained for %f seconds", [stopwatch elapsedTime]);
-}
-
-- (void)drainUntilIdle {
-  GREYLogVerbose(@"Active Run Loop being drained for an infinite timeout until the app is Idle.");
-  GREYStopwatch *stopwatch = [[GREYStopwatch alloc] init];
-  [stopwatch start];
-  [self executeSyncWithTimeout:kGREYInfiniteTimeout block:nil error:nil];
-  [stopwatch stop];
-  GREYLogVerbose(@"App became idle after %f seconds", [stopwatch elapsedTime]);
-}
-
-- (BOOL)drainUntilIdleWithTimeout:(CFTimeInterval)seconds {
-  NSError *ignoreError;
-  GREYLogVerbose(@"Active Run Loop being drained for an %f seconds until the app is Idle.",
-                 seconds);
-  GREYStopwatch *stopwatch = [[GREYStopwatch alloc] init];
-  [stopwatch start];
-  BOOL success = [self executeSyncWithTimeout:seconds block:nil error:&ignoreError];
-  [stopwatch stop];
-  if (success) {
-    GREYLogVerbose(@"App became idle after %f seconds", [stopwatch elapsedTime]);
-  } else {
-    GREYLogVerbose(@"Run loop drain timed out after %f seconds", [stopwatch elapsedTime]);
-  }
-  return success;
-}
-
-- (BOOL)executeSync:(GREYExecBlock)execBlock error:(__strong NSError **)error {
-  GREYLogVerbose(@"Execution block: %@ is being synchronized and executed on the main thread.",
-                 execBlock);
-  return [self executeSyncWithTimeout:kGREYInfiniteTimeout block:execBlock error:error];
 }
 
 - (BOOL)executeSyncWithTimeout:(CFTimeInterval)seconds
@@ -231,10 +200,10 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
       if ([busyResources count] > 0) {
         NSString *description = @"Failed to execute block because idling resources below are busy.";
         GREYPopulateErrorNotedOrLog(error,
-                                    kGREYUIThreadExecutorErrorDomain,
-                                    kGREYUIThreadExecutorTimeoutErrorCode,
-                                    description,
-                                    [self grey_errorDictionaryForBusyResources:busyResources]);
+                        kGREYUIThreadExecutorErrorDomain,
+                        kGREYUIThreadExecutorTimeoutErrorCode,
+                        description,
+                        [self grey_errorDictionaryForBusyResources:busyResources]);
       } else {
         GREYPopulateErrorOrLog(error,
                                kGREYUIThreadExecutorErrorDomain,
@@ -253,9 +222,39 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
     return YES;
   }
 }
-
+/////////////////////////////////////////////////////////////////////////////////////
+- (void)drainUntilIdle {
+    GREYLogVerbose(@"Active Run Loop being drained for an infinite timeout until the app is Idle.");
+    GREYStopwatch *stopwatch = [[GREYStopwatch alloc] init];
+    [stopwatch start];
+    [self executeSyncWithTimeout:kGREYInfiniteTimeout block:nil error:nil];
+    [stopwatch stop];
+    GREYLogVerbose(@"App became idle after %f seconds", [stopwatch elapsedTime]);
+}
+- (BOOL)drainUntilIdleWithTimeout:(CFTimeInterval)seconds {
+    NSError *ignoreError;
+    GREYLogVerbose(@"Active Run Loop being drained for an %f seconds until the app is Idle.",
+                   seconds);
+    GREYStopwatch *stopwatch = [[GREYStopwatch alloc] init];
+    [stopwatch start];
+    BOOL success = [self executeSyncWithTimeout:seconds block:nil error:&ignoreError];
+    [stopwatch stop];
+    if (success) {
+        GREYLogVerbose(@"App became idle after %f seconds", [stopwatch elapsedTime]);
+    } else {
+        GREYLogVerbose(@"Run loop drain timed out after %f seconds", [stopwatch elapsedTime]);
+    }
+    return success;
+}
+- (BOOL)executeSync:(GREYExecBlock)execBlock error:(__strong NSError **)error {
+    GREYLogVerbose(@"Execution block: %@ is being synchronized and executed on the main thread.",
+                   execBlock);
+    return [self executeSyncWithTimeout:kGREYInfiniteTimeout block:execBlock error:error];
+}
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Package Internal
-
 - (void)registerIdlingResource:(id<GREYIdlingResource>)resource {
   GREYFatalAssert(resource);
   @synchronized(_registeredIdlingResources) {
@@ -264,14 +263,15 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
     [_registeredIdlingResources insertObject:resource atIndex:0];
   }
 }
-
 - (void)deregisterIdlingResource:(id<GREYIdlingResource>)resource {
   GREYFatalAssert(resource);
   @synchronized(_registeredIdlingResources) {
     [_registeredIdlingResources removeObject:resource];
   }
 }
-
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Internal Methods Exposed For Testing
 
 /**
@@ -345,7 +345,6 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
           }
         }
       }
-        
     }
     return busyResources;
   }
@@ -362,7 +361,6 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
   }
   return busyResourcesNameToDesc;
 }
-
 /**
  *  Drains the UI thread and waits for both the UI and idling resources to idle, for up to
  *  @c kDrainTimeoutSecondsBeforeForcedStateTrackerCleanup seconds, before forcefully clearing
@@ -380,5 +378,5 @@ typedef NS_ENUM(NSInteger, GREYExecutionState) {
     [[GREYAppStateTracker sharedInstance] grey_clearState];
   }
 }
-
 @end
+

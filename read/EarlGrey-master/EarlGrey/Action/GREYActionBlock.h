@@ -13,27 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <EarlGrey/GREYBaseAction.h>
-
 @protocol GREYMatcher;
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  Block type for defining the action's 'perform' code.
- *
  *  @param      element    The element on which the block is going to be performed.
  *  @param[out] errorOrNil The error set on failure. The error returned can be @c nil, signifying
  *                         that the action succeeded.
- *
  *  @throws NSException when there is a failure and @c errorOrNil is not provided
  *          (i.e. it is @c nil).
  *
  *  @return @c YES if the action performed succeeded, else @c NO.
  */
 typedef BOOL (^GREYPerformBlock)(id element, __strong NSError *_Nullable *errorOrNil);
-
 
 /**
  *  A class for creating block based GREYAction.
@@ -47,7 +40,8 @@ typedef BOOL (^GREYPerformBlock)(id element, __strong NSError *_Nullable *errorO
  *
  *  @return A GREYActionBlock instance with the given name.
  */
-+ (instancetype)actionWithName:(NSString *)name performBlock:(GREYPerformBlock)block;
++ (instancetype)actionWithName:(NSString *)name
+            performBlock:(GREYPerformBlock)block;
 /**
  *  Creates a GREYAction that performs the action in the provided @c block subject to the
  *  provided @c constraints.
@@ -84,7 +78,6 @@ typedef BOOL (^GREYPerformBlock)(id element, __strong NSError *_Nullable *errorO
 - (instancetype)initWithName:(NSString *)name
                  constraints:(id<GREYMatcher> _Nullable)constraints
                 performBlock:(GREYPerformBlock)block NS_DESIGNATED_INITIALIZER;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

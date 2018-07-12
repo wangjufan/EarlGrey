@@ -13,18 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 /**
  *  @file GREYAppleInternals.h
  *  @brief Exposes interfaces, structs and methods that are otherwise private.
  */
-
 #import <UIKit/UIKit.h>
+
 
 @interface UIWindow (GREYExposed)
 - (id)firstResponder;
 @end
-
 @interface UIViewController (GREYExposed)
 - (void)viewWillMoveToWindow:(id)window;
 - (void)viewDidMoveToWindow:(id)window shouldAppearOrDisappear:(BOOL)arg;
@@ -184,6 +182,7 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
 - (void)_sendMotionEnded:(UIEventSubtype)subtype;
 @end
 
+
 @interface UIScrollView (GREYExposed)
 /**
  *  Called when user is about to begin scrolling the content.
@@ -206,10 +205,10 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
 - (void)_stopScrollDecelerationNotify:(BOOL)notify;
 @end
 
+
 @interface UIDevice (GREYExposed)
 - (void)setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated;
 @end
-
 @interface UITouch (GREYExposed)
 /**
  *  Sets flag marking this touch as the first touch for view.
@@ -217,14 +216,12 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  *  @param first A boolean to indicate if this is the first touch for the view.
  */
 - (void)_setIsFirstTouchForView:(BOOL)first;
-
 /**
  *  Sets flag marking this touch as a tap.
  *
  *  @param isTap A boolean to indicate that this is a tap.
  */
 - (void)setIsTap:(BOOL)isTap;
-
 /**
  *  Sets location property to @c location. If @c reset is @c NO, the original value of location will
  *  be stored in the UITouch's internal property @c previousLocation. If @c reset is @c YES, @c
@@ -234,42 +231,36 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  *  @param reset    An indicator to specify if @c previousLocation must be reset.
  */
 - (void)_setLocationInWindow:(CGPoint)location resetPrevious:(BOOL)reset;
-
 /**
  *  Sets phase property and notifies phaseChangeDelegate.
  *
  *  @param phase The new phase property.
  */
 - (void)setPhase:(UITouchPhase)phase;
-
 /**
  *  Sets tapCount property.
  *
  *  @param tapCount The new tap count.
  */
 - (void)setTapCount:(NSUInteger)tapCount;
-
 /**
  *  Sets timestamp property.
  *
  *  @param timestamp The new timestamp.
  */
 - (void)setTimestamp:(NSTimeInterval)timestamp;
-
 /**
  *  Sets view property.
  *
  *  @param view The new view property.
  */
 - (void)setView:(UIView *)view;
-
 /**
  *  Sets window property and converts stored CGPoint structs to the the window's coordinate system.
  *
  *  @param window The new window property.
  */
 - (void)setWindow:(UIWindow *)window;
-
 /**
  *  Sets HIDEvent property for this touch.
  *
@@ -277,7 +268,6 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  */
 - (void)_setHidEvent:(IOHIDEventRef)event;
 @end
-
 @interface UIKeyboardTaskQueue
 /**
  *  Completes all pending or ongoing tasks in the task queue before returning. Must be called from
@@ -285,35 +275,29 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  */
 - (void)waitUntilAllTasksAreFinished;
 @end
-
 @interface UIKeyboardImpl
 /**
  *  @return Shared instance of UIKeyboardImpl. It may be different from the active instance.
  */
 + (instancetype)sharedInstance;
-
 /**
  *  @return The Active instance of UIKeyboardImpl, if one exists; otherwise returns @c nil. Active
  *          instance could exist even if the keyboard is not shown on the screen.
  */
 + (instancetype)activeInstance;
-
 /**
  *  @return The current keyboard layout view, which contains accessibility elements for keyboard
  *          keys that are shown on the keyboard.
  */
 - (UIView *)_layout;
-
 /**
  *  @return The string shown on the return key on the keyboard.
  */
 - (NSString *)returnKeyDisplayName;
-
 /**
  *  @return The task queue keyboard is using to manage asynchronous tasks.
  */
 - (UIKeyboardTaskQueue *)taskQueue;
-
 /**
  *  Automatically hides the software keyboard if @c enabled is set to @c YES and hardware keyboard
  *  is available. Setting @c enabled to @c NO will always show software keyboard. This setting is
@@ -322,12 +306,10 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  *  @param enabled A boolean that indicates automatic minimization (hiding) of the keyboard.
  */
 - (void)setAutomaticMinimizationEnabled:(BOOL)enabled;
-
 /**
  *  @return The delegate that the UIKeyboard is typing on.
  */
 - (id)delegate;
-
 /**
  *  Sets the current UIKeyboard's delegate.
  *
@@ -341,7 +323,6 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  *  to be ignored.
  */
 - (void)hideKeyboard;
-
 /**
  *  A method to show the keyboard without resigning the first responder. This is used only
  *  in iOS 8.1 where we found that turning off the autocorrection type on the first responder
@@ -351,26 +332,23 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
 - (void)showKeyboard;
 @end
 
+
 /**
  * Text Input preferences controller to modify the keyboard preferences for iOS 8+.
  */
 @interface TIPreferencesController : NSObject
-
 /** Whether the autocorrection is enabled. */
 @property BOOL autocorrectionEnabled;
-
 /** Whether the predication is enabled. */
 @property BOOL predictionEnabled;
-
 /** The shared singleton instance. */
 + (instancetype)sharedPreferencesController;
-
 /** Synchronize the change to save it on disk. */
 - (void)synchronizePreferences;
-
 /** Modify the preference @c value by @c key. */
 - (void)setValue:(NSValue *)value forPreferenceKey:(NSString *)key;
 @end
+
 
 /**
  *  Used for enabling accessibility on simulator and device.
@@ -388,16 +366,15 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
                               notification:(CFStringRef)notification;
 @end
 
+
 /**
  *  Used for enabling accessibility on device.
  */
 @interface XCAXClient_iOS
-
 /**
  *  Singleton shared instance when initialized will try to background the current process.
  */
 + (id)sharedClient;
-
 /**
  *  Programatically enable accessibility on both simulator and device.
  *  Blocks until accessibility is fully loaded.
@@ -405,14 +382,13 @@ IOHIDEventRef IOHIDEventCreateDigitizerFingerEvent(CFAllocatorRef allocator,
  *  @return ignored.
  */
 - (bool)loadAccessibility:(void **)unused;
-
 @end
 
-@interface UIAccessibilityTextFieldElement
 
+@interface UIAccessibilityTextFieldElement
 /**
  *  @return The UITextField that contains the accessibility text field element.
  */
 -(UITextField *)textField;
-
 @end
+

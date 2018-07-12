@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!-- saved from url=(0042)http://qingmo.me/2017/03/04/FlowOfUITouch/ -->
+<html lang="zh"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>iOS触摸事件的流动 | 轻墨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="当指肚轻触屏幕，整个系统像沉睡的生灵突然被惊醒，然后经历过腥风血雨的一段奇幻旅行，最终又归于沉寂。
+整个iOS触摸事件从产生到寂灭大致如下图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS触摸事件的流动">
+<meta property="og:url" content="http://rrrain.com/2017/03/04/FlowOfUITouch/index.html">
+<meta property="og:site_name" content="轻墨">
+<meta property="og:description" content="当指肚轻触屏幕，整个系统像沉睡的生灵突然被惊醒，然后经历过腥风血雨的一段奇幻旅行，最终又归于沉寂。
+整个iOS触摸事件从产生到寂灭大致如下图：">
+<meta property="og:image" content="http://rrrain.com/images/touchscreen.jpg">
+<meta property="og:updated_time" content="2017-03-17T15:42:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS触摸事件的流动">
+<meta name="twitter:description" content="当指肚轻触屏幕，整个系统像沉睡的生灵突然被惊醒，然后经历过腥风血雨的一段奇幻旅行，最终又归于沉寂。
+整个iOS触摸事件从产生到寂灭大致如下图：">
+<meta name="twitter:image" content="http://rrrain.com/images/touchscreen.jpg">
+    
+
+    
+
+    
+
+    <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/font-awesome.min.css">
+    <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/styles.css">
+    <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/styles(1).css">
+
+    <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/style.css">
+
+    <script src="./iOS触摸事件的流动 _ 轻墨_files/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="./iOS触摸事件的流动 _ 轻墨_files/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+<script src="http://shellhue.disqus.com/embed.js" data-timestamp="1531377547388"></script></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="http://qingmo.me/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">轻墨</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="http://qingmo.me/">首页</a>
+                
+                    <a class="main-nav-link" href="http://qingmo.me/archives">归档</a>
+                
+                    <a class="main-nav-link" href="http://qingmo.me/tags">标签</a>
+                
+                    <a class="main-nav-link" href="http://qingmo.me/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="./iOS触摸事件的流动 _ 轻墨_files/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tbody><tr>
+                
+                    <td><a class="main-nav-link" href="http://qingmo.me/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="http://qingmo.me/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="http://qingmo.me/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="http://qingmo.me/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
+    </div>
+
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            <section id="main"><article id="post-FlowOfUITouch" class="article article-type-post" itemscope="" itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            iOS触摸事件的流动
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="http://qingmo.me/2017/03/04/FlowOfUITouch/">
+            <time datetime="2017-03-04T07:49:21.000Z" itemprop="datePublished">2017-03-04</time>
+        </a>
+    </div>
+
+
+                        
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="http://qingmo.me/tags/Swift/">Swift</a>, <a class="tag-link" href="http://qingmo.me/tags/iOS/">iOS</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody" lg-uid="lg0">
+        
+            
+            <p>当指肚轻触屏幕，整个系统像沉睡的生灵突然被惊醒，然后经历过腥风血雨的一段奇幻旅行，最终又归于沉寂。</p>
+<p>整个iOS触摸事件从产生到寂灭大致如下图：</p>
+<p><a href="./iOS触摸事件的流动 _ 轻墨_files/uitouchflow.png" title="" class="gallery-item" lg-event-uid="&amp;1"><img src="./iOS触摸事件的流动 _ 轻墨_files/uitouchflow.png" alt=""></a><br><a id="more"></a></p>
+<h2 id="起始阶段"><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#%E8%B5%B7%E5%A7%8B%E9%98%B6%E6%AE%B5" class="headerlink" title="起始阶段"></a>起始阶段</h2><p>—-&gt; cpu处于睡眠状态，等待事件发生<br>—-&gt; 手指触摸屏幕</p>
+<h2 id="系统响应阶段"><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#%E7%B3%BB%E7%BB%9F%E5%93%8D%E5%BA%94%E9%98%B6%E6%AE%B5" class="headerlink" title="系统响应阶段"></a>系统响应阶段</h2><p>—-&gt; 屏幕硬件感应到输入，并将感应到的事件传递给输入输出驱动IOKit<br>—-&gt; IOKit.framework封装整个触摸事件为IOHIDEvent对象<br>—-&gt; IOKit.framework通过IPC将事件转发给SpringBoard.app</p>
+<p>以上是系统层的响应。系统感应到外界的输入，并将相应的输入封装成比较概括的<a href="http://iphonedevwiki.net/index.php/IOHIDFamily" target="_blank" rel="external">IOHIDEvent</a>对象，然后UIKit通过IOHIDEvent的类型，判断出相应事件应该由<a href="http://iphonedevwiki.net/index.php/SpringBoard.app" target="_blank" rel="external">SpringBoard  .app</a>处理，直接通过mach port(IPC进程间通信)转发给SpringBoard.app。</p>
+<p>SpringBoard.app就是iOS的系统桌面，当触摸事件发生时，也只有负责管理桌面的SpringBoard.app才知道如何正确的响应。因为触摸发生时，有可能用户正在桌面翻页找App，也有可能正处于在微信中刷朋友圈。</p>
+<h2 id="桌面响应阶段"><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#%E6%A1%8C%E9%9D%A2%E5%93%8D%E5%BA%94%E9%98%B6%E6%AE%B5" class="headerlink" title="桌面响应阶段"></a>桌面响应阶段</h2><p>—-&gt; SpringBoard.app主线程Runloop收到<a href="https://developer.apple.com/reference/iokit" target="_blank" rel="external">IOKit.framework</a>转发来的消息苏醒，并触发对应Mach Port的Source1回调<code>__IOHIDEventSystemClientQueueCallback()</code>。</p>
+<p>—-&gt; 如果SpringBoard.app监测到有App在前台（记为xxxx.app），SpringBoard.app通过mach port(IPC进程间通信)转发给xxxx.app，如果SpringBoard.app监测到监测无前台App，则SpringBoard.app进入App内部响应阶段的第二段，记触发Source0回调。</p>
+<h2 id="App内部响应阶段"><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#App%E5%86%85%E9%83%A8%E5%93%8D%E5%BA%94%E9%98%B6%E6%AE%B5" class="headerlink" title="App内部响应阶段"></a>App内部响应阶段</h2><p>—-&gt; 前台App主线程Runloop收到SpringBoard.app转发来的消息苏醒，并触发对应Mach Port的Source1回调<code>__IOHIDEventSystemClientQueueCallback()</code>。<br>—-&gt; Source1回调内部触发Source0回调<code>__UIApplicationHandleEventQueue()</code><br>—-&gt; Soucre0回调内部，封装<code>IOHIDEvent</code>为<code>UIEvent</code><br>—-&gt; Soucre0回调内部调用<code>UIApplication</code>的<code>sendEvent:</code>方法，将<code>UIEvent</code>传给<code>UIWindow</code><br>—-&gt; 平时开发熟悉的触摸事件响应链从这开始了<br>—-&gt; 通过递归调用UIView层级的<code>hitTest(_:with:)</code>，结合<code>point(inside:with:)</code>找到<code>UIEvent</code>中每一个<code>UITouch</code>所属的<code>UIView</code>（其实是想找到离触摸事件点最近的那个<code>UIView</code>）。这个过程是从<code>UIView</code>层级的最顶层往最底层递归查询，但这不是<code>UIResponder</code>响应链，事件响应是在<code>UIEvent</code>中每一个<code>UITouch</code>所属的<code>UIView</code>都确定之后方才开始。</p>
+<p>但需要注意，以下三种情况<code>UIView</code>的<code>hitTest(_:with:)</code>不会被调用，也导致其子<code>UIView</code>的<code>hitTest(_:with:)</code>不会被调用，而之后响应事件是下向上传递的，这直接导致以下三种情况的<code>UIView</code>及其子<code>UIView</code>不接收任何触摸事件：</p>
+<ol>
+<li>userInteractionEnabled = NO</li>
+<li>hidden = YES</li>
+<li>alpha = 0.0~0.01之间</li>
+</ol>
+<p>提示: UIImageView的userInteractionEnabled默认为NO,因此UIImageView以及它的子控件默认是不接收触摸事件的。</p>
+<p>当把断点打在某个UIView<code>hitTest(_:with:)</code>中时，对应的调用堆栈如下：<br><a href="./iOS触摸事件的流动 _ 轻墨_files/calltraceoftouching.png" title="" class="gallery-item" lg-event-uid="&amp;2"><img src="./iOS触摸事件的流动 _ 轻墨_files/calltraceoftouching.png" alt=""></a><br>—-&gt; 根据围绕<code>UITouch</code>所属的<code>UIView</code>及其祖先<code>UIView</code>的gesture recognizers，来确定一个UITouch的gestureRecognizers</p>
+<p>—-&gt; UITouch所属的UIView和gestureRecognizers收到此UITouch和相应的UIEvent，并按照UITouch所处的状态调用四大UITouch方法<code>touchesBegan(_:with:) touchesMoved(_:with:) touchesEnded(_:with:) touchesCancelled(_:with:)</code>中的一个。（事件响应开始）</p>
+<p>—-&gt; 对于UIView收到的UITouches事件（四大UITouch事件都是如此），则会按照UIResponder响应链一直往上传递，直到某个UIResponder因为主动响应触摸事件，切断了响应链（即不调用下一个UIResponder的响应方法），如果一直没有UIResponder做响应处理，则这些UITouches到达最后的响应者即UIApplication后，就被吃掉了，消失了。</p>
+<p>—-&gt; 如果在事件响应过程中，有UIGestureRecognizer成功识别，则此UIGestureRecognizer将独自占有所需要的UITouches，这些UITouches所属的UIView及其他的UIGestureRecognizer的<code>touchesCancelled(_:with:)</code>方法将调用（如果在手势的代理中设置可以同时识别两个手势，则允许同时识别的手势均可以收到所需要的UITouches事件）。但与识别成功的UIGestureRecognizer无关的UITouches则会继续按照上述传递逻辑传递。也即允许两个手势同时识别，只要所占有的UITouches不相同。</p>
+<p>—-&gt; 如果UIGestureRecognizer识别成功，则调用相应的action，处理对应的逻辑。如果某个UIResponder主动响应了触摸事件，则根据其本身的响应逻辑处理对应的业务，UIControl都是主动响应并切断UITouch的向上传递的。</p>
+<p>—-&gt; UITouches事件流动完毕，整个系统重新进入睡眠等待下一个事件</p>
+<h2 id="总结"><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#%E6%80%BB%E7%BB%93" class="headerlink" title="总结"></a>总结</h2><p>从手指触碰到屏幕，UITouch大致经历三个阶段，<code>系统处理阶段----&gt;SpringBoard.app处理阶段----&gt;前台App处理阶段</code>，事实上日常开发只需知晓最后一个阶段即可，前两个阶段参考资料也不多，更多的还涉及系统底层，这里仅做简单介绍。</p>
+<h2 id="参考文献："><a href="http://qingmo.me/2017/03/04/FlowOfUITouch/#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%EF%BC%9A" class="headerlink" title="参考文献："></a>参考文献：</h2><ol>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=400417748&amp;idx=1&amp;sn=0c5f6747dd192c5a0eea32bb4650c160&amp;3rd=MzA3MDU4NTYzMw==&amp;scene=6#rd" target="_blank" rel="external">《iOS 事件处理机制与图像渲染过程》</a></li>
+<li><a href="https://developer.apple.com/library/content/documentation/EventHandling/Conceptual/EventHandlingiPhoneOS/Introduction/Introduction.html" target="_blank" rel="external">Event Handling Guide for iOS</a></li>
+<li><a href="http://iphonedevwiki.net/index.php/IOHIDFamily" target="_blank" rel="external">IOHIDFamily</a></li>
+<li><a href="http://iphonedevwiki.net/index.php/SpringBoard.app" target="_blank" rel="external">SpringBoard</a></li>
+<li><a href="http://blog.ibireme.com/2015/05/18/runloop/" target="_blank" rel="external">深入理解RunLoop</a></li>
+<li><a href="http://www.amazon.com/Programming-iOS-Views-Controllers-Frameworks/dp/1491936851" target="_blank" rel="external">Programming iOS 9</a></li>
+<li><a href="http://iphonedevwiki.net/index.php/GSEvent" target="_blank" rel="external">GSEvent</a></li>
+<li><a href="http://www.jianshu.com/p/82024d85c529" target="_blank" rel="external">事件传递</a></li>
+<li><a href="http://www.jianshu.com/p/98ed2eaa40ac" target="_blank" rel="external">iOS事件点击之发生了什么？</a></li>
+<li><a href="https://github.com/kennytm/iphone-private-frameworks/tree/master/IOKit" target="_blank" rel="external">IOKit.framework</a></li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://rrrain.com/2017/03/04/FlowOfUITouch/" data-id="cj605amek0000q570zxmu32fu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://rrrain.com/2017/03/04/FlowOfUITouch/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://rrrain.com/2017/03/04/FlowOfUITouch/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="http://qingmo.me/2017/03/11/creationalDesignPattern/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    《创建型设计模式》之iOS系统框架实践
+                
+            </div>
+        </a>
+    
+    
+        <a href="http://qingmo.me/2017/02/07/fakedata/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">如何在iOS开发中更好的做假数据？</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="http://qingmo.me/2017/07/21/asyndisplaykit/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/asyncdisplaykit.png)" alt="AsyncDisplayKit近一年的使用体会及疑难点" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="http://qingmo.me/2017/07/21/asyndisplaykit/" class="title">AsyncDisplayKit近一年的使用体会及疑难点</a></p>
+                            <p class="item-date"><time datetime="2017-07-21T06:35:29.000Z" itemprop="datePublished">2017-07-21</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="http://qingmo.me/2017/04/08/sharecode/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/gitrepository.png)" alt="iOS两个客户端代码复用小技巧" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="http://qingmo.me/2017/04/08/sharecode/" class="title">iOS两个客户端代码复用小技巧</a></p>
+                            <p class="item-date"><time datetime="2017-04-08T12:46:45.000Z" itemprop="datePublished">2017-04-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="http://qingmo.me/2017/04/01/alwaystrying/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/readingbook.jpg)" alt="生命的惯性" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="http://qingmo.me/2017/04/01/alwaystrying/" class="title">生命的惯性</a></p>
+                            <p class="item-date"><time datetime="2017-03-31T16:35:29.000Z" itemprop="datePublished">2017-04-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="http://qingmo.me/2017/03/22/gitcommit/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/gitcommit.png)" alt="commit和branch理解深入" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="http://qingmo.me/2017/03/22/gitcommit/" class="title">commit和branch理解深入</a></p>
+                            <p class="item-date"><time datetime="2017-03-22T12:47:10.000Z" itemprop="datePublished">2017-03-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="http://qingmo.me/2017/03/18/structuralpattern/" class="thumbnail">
+    
+    
+        <span style="background-image:url(/images/designpattern.jpg)" alt="《结构型设计模式》之iOS系统框架实践" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="http://qingmo.me/2017/03/18/structuralpattern/" class="title">《结构型设计模式》之iOS系统框架实践</a></p>
+                            <p class="item-date"><time datetime="2017-03-18T12:47:10.000Z" itemprop="datePublished">2017-03-18</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://www.weibo.com/shellhue/">关注轻墨微博</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://github.com/shellhue">关注轻墨github</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up" style="display: block; left: 837.656px;"></div>
+</aside>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            © 2017 轻墨<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_config = function () {
+        
+            this.page.url = 'http://rrrain.com/2017/03/04/FlowOfUITouch/';
+        
+        this.page.identifier = 'FlowOfUITouch';
+    };
+    (function() { 
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'shellhue' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+
+
+    
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lightgallery.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-thumbnail.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-pager.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-autoplay.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-fullscreen.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-zoom.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-hash.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-share.min.js"></script>
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/lg-video.min.js"></script>
+    
+    
+        <script src="./iOS触摸事件的流动 _ 轻墨_files/jquery.justifiedGallery.min.js"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="./iOS触摸事件的流动 _ 轻墨_files/main.js"></script>
+
+    </div><div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+
+</body></html>

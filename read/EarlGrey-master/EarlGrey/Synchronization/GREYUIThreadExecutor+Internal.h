@@ -19,35 +19,24 @@
  *  @brief Exposes GREYUIThreadExecutor interfaces and methods that are otherwise private for
  *         testing purposes.
  */
-
 #import <EarlGrey/GREYUIThreadExecutor.h>
-
 @protocol GREYIdlingResource;
-
 NS_ASSUME_NONNULL_BEGIN
-
 @interface GREYUIThreadExecutor (Internal)
-
 /**
  *  Register the specified @c resource to be checked for idling before executing test actions.
  *  A strong reference is held to @c resource until it is deregistered using
  *  @c deregisterIdlingResource. It is safe to call this from any thread.
- *
  *  @param resource The idling resource to register.
- *
  *  @remark This is available only for internal testing purposes.
  */
 - (void)registerIdlingResource:(id<GREYIdlingResource>)resource;
-
 /**
  *  Unregisters a previously registered @c resource. It is safe to call this from any thread.
- *
  *  @param resource The resource to unregistered.
- *
  *  @remark This is available only for internal testing purposes.
  */
 - (void)deregisterIdlingResource:(id<GREYIdlingResource>)resource;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

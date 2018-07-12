@@ -25,7 +25,6 @@
 
 - (instancetype)initWithMatchers:(NSArray *)matchers {
   GREYThrowOnFailedCondition(matchers.count > 0);
-
   self = [super init];
   if (self) {
     _matchers = matchers;

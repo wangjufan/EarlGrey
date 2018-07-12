@@ -61,7 +61,6 @@ static Class gAccessibilityTextFieldElementClass;
 + (id<GREYAction>)actionForSwipeFastInDirection:(GREYDirection)direction {
   return [[GREYSwipeAction alloc] initWithDirection:direction duration:kGREYSwipeFastDuration];
 }
-
 + (id<GREYAction>)actionForSwipeSlowInDirection:(GREYDirection)direction {
   return [[GREYSwipeAction alloc] initWithDirection:direction duration:kGREYSwipeSlowDuration];
 }

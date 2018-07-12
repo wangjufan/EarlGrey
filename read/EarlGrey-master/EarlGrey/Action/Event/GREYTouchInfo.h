@@ -13,9 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <UIKit/UIKit.h>
-
 /**
  *  An enum for what phase of a touch action a @c GREYTouchInfo object is in.
  */
@@ -24,13 +22,11 @@ typedef NS_ENUM(NSUInteger, GREYTouchInfoPhase) {
   GREYTouchInfoPhaseTouchMoved,
   GREYTouchInfoPhaseTouchEnded,
 };
-
 NS_ASSUME_NONNULL_BEGIN
 /** 事件分发基本模式：生成与消费
  *  An object to encapsulate essential information about a touch.
  */
 @interface GREYTouchInfo : NSObject
-
 /**
  *  Points where touch should be delivered.
  */
@@ -49,10 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  causing it to miss the expected delivery time.
  */
 @property(nonatomic, readonly, getter=isExpendable) BOOL expendable;
-
 /**
  *  Initializes this object to represent a touch at the the given @c points.
- *
  *  @param points                         The CGPoints where the touches are to be delivered.
  *  @param phase                          The current phase of each touch point.
  *  @param timeDeltaSinceLastTouchSeconds The relative injection time from the time last
@@ -62,18 +56,16 @@ NS_ASSUME_NONNULL_BEGIN
  *                                        touch can be dropped if system lag causes the system to
  *                                        miss the expected delivery time. If @c NO, then the touch
  *                                        will be delivered regardless.
- *
  *  @return An instance of GREYTouchInfo, initialized with all required data.
  */
 - (instancetype)initWithPoints:(NSArray *)points
                     phase:(GREYTouchInfoPhase)phase
 deliveryTimeDeltaSinceLastTouch:(NSTimeInterval)timeDeltaSinceLastTouchSeconds
-                         expendable:(BOOL)expendable NS_DESIGNATED_INITIALIZER;
+                expendable:(BOOL)expendable NS_DESIGNATED_INITIALIZER;
 /**
  *  @remark init is not an available initializer. Use the other initializers.
  */
 - (instancetype)init NS_UNAVAILABLE;
-
 @end
 NS_ASSUME_NONNULL_END
 

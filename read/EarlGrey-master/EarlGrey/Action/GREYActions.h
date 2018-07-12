@@ -13,21 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <Foundation/Foundation.h>
-
 #import <EarlGrey/GREYConstants.h>
 #import <EarlGrey/GREYDefines.h>
-
 @protocol GREYAction;
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A interface that exposes UI element actions.
  */
 @interface GREYActions : NSObject
-
 /**
  *  @return A GREYAction that performs multiple taps of a specified @c count.
  */
@@ -381,36 +375,30 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return A GREYAction that takes a snapshot of an UI element.
  */
 + (id<GREYAction>)actionForSnapshot:(__strong UIImage *_Nullable *_Nullable)outImage;
-
 @end
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 #if !(GREY_DISABLE_SHORTHAND)
 /** Shorthand macro for GREYActions::actionForMultipleTapsWithCount: with count @c 2. */
 GREY_EXPORT id<GREYAction> grey_doubleTap(void);
-
 /**
  *  Shorthand macro for
  *  GREYActions::actionForMultipleTapsWithCount: with count @c 2 and @c point.
  */
 GREY_EXPORT id<GREYAction> grey_doubleTapAtPoint(CGPoint point);
-
 /** Shorthand macro for GREYActions::actionForMultipleTapsWithCount:. */
 GREY_EXPORT id<GREYAction> grey_multipleTapsWithCount(NSUInteger count);
-
 /** Shorthand macro for GREYActions::actionForLongPress. */
 GREY_EXPORT id<GREYAction> grey_longPress(void);
-
 /** Shorthand macro for GREYActions::actionForLongPressWithDuration:. */
 GREY_EXPORT id<GREYAction> grey_longPressWithDuration(CFTimeInterval duration);
-
 /** Shorthand macro for GREYActions::actionForLongPressAtPoint:duration:. */
 GREY_EXPORT id<GREYAction> grey_longPressAtPointWithDuration(CGPoint point,
                                                              CFTimeInterval duration);
-
 /** Shorthand macro for GREYActions::actionForScrollInDirection:amount:. */
 GREY_EXPORT id<GREYAction> grey_scrollInDirection(GREYDirection direction, CGFloat amount);
-
 /**
  *  Shorthand macro for
  *  GREYActions::actionForScrollInDirection:amount:xOriginStartPercentage:yOriginStartPercentage:.
@@ -422,7 +410,6 @@ GREY_EXPORT id<GREYAction> grey_scrollInDirectionWithStartPoint(GREYDirection di
 
 /** Shorthand macro for GREYActions::actionForScrollToContentEdge:. */
 GREY_EXPORT id<GREYAction> grey_scrollToContentEdge(GREYContentEdge edge);
-
 /**
  *  Shorthand macro for
  *  GREYActions::actionForScrollToContentEdge:xOriginStartPercentage:yOriginStartPercentage:.

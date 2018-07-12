@@ -65,26 +65,25 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
               [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches descriptionBlock:describe],
               nil);
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 + (id<GREYMatcher>)matcherForCloseTo:(double)value delta:(double)delta {
   return [[GREYHCMatcher alloc] initWithHCMatcher:HC_closeTo(value, delta)];
 }
 + (id<GREYMatcher>)matcherForAnything {
   return [[GREYHCMatcher alloc] initWithHCMatcher:HC_anything()];
 }
-
 + (id<GREYMatcher>)matcherForEqualTo:(id)value {
   return [[GREYHCMatcher alloc] initWithHCMatcher:HC_equalTo(value)];
 }
-
 + (id<GREYMatcher>)matcherForLessThan:(id)value {
   return [[GREYHCMatcher alloc] initWithHCMatcher:HC_lessThan(value)];
 }
-
 + (id<GREYMatcher>)matcherForGreaterThan:(id)value {
   return [[GREYHCMatcher alloc] initWithHCMatcher:HC_greaterThan(value)];
 }
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 + (id<GREYMatcher>)matcherForAccessibilityLabel:(NSString *)label {
   MatchesBlock matches = ^BOOL(NSObject *element) {
     return [self grey_accessibilityString:element.accessibilityLabel
@@ -94,11 +93,10 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
     [description appendText:[NSString stringWithFormat:@"accessibilityLabel('%@')", label]];
   };
   return grey_allOf(grey_accessibilityElement(),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
+            descriptionBlock:describe],
                     nil);
 }
-
 + (id<GREYMatcher>)matcherForAccessibilityID:(NSString *)accessibilityID {
   MatchesBlock matches = ^BOOL(id<UIAccessibilityIdentification> element) {
     if (element.accessibilityIdentifier == accessibilityID) {
@@ -111,9 +109,9 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
                                                        accessibilityID]];
   };
   return grey_allOf(grey_respondsToSelector(@selector(accessibilityIdentifier)),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
-                    nil);
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
+            descriptionBlock:describe],
+            nil);
 }
 
 + (id<GREYMatcher>)matcherForAccessibilityValue:(NSString *)value {
@@ -129,9 +127,8 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
                                                        value]];
   };
   return grey_allOf(grey_accessibilityElement(),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
-                    nil);
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches descriptionBlock:describe],
+            nil);
 }
 
 + (id<GREYMatcher>)matcherForAccessibilityTraits:(UIAccessibilityTraits)traits {
@@ -143,11 +140,9 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
     [description appendText:[NSString stringWithFormat:@"accessibilityTraits: %@", traitsString]];
   };
   return grey_allOf(grey_accessibilityElement(),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
-                    nil);
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches descriptionBlock:describe],
+            nil);
 }
-
 + (id<GREYMatcher>)matcherForAccessibilityHint:(id)hint {
   MatchesBlock matches = ^BOOL(NSObject *element) {
     id accessibilityHint = element.accessibilityHint;
@@ -160,9 +155,8 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
     [description appendText:[NSString stringWithFormat:@"accessibilityHint('%@')", hint]];
   };
   return grey_allOf(grey_accessibilityElement(),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
-                    nil);
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches descriptionBlock:describe],
+            nil);
 }
 
 + (id<GREYMatcher>)matcherForAccessibilityElementIsFocused {
@@ -173,7 +167,7 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
     [description appendText:@"accessibilityFocused"];
   };
   id<GREYMatcher> matcher = [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                                 descriptionBlock:describe];
+                                                descriptionBlock:describe];
   return grey_allOf(grey_respondsToSelector(@selector(accessibilityElementIsFocused)),
                     matcher, nil);
 }
@@ -202,8 +196,7 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
     [description appendText:@"firstResponder"];
   };
   return grey_allOf(grey_kindOfClass([UIResponder class]),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches descriptionBlock:describe],
                     nil);
 }
 
@@ -652,26 +645,24 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
                                                        NSStringFromGREYContentEdge(edge)]];
   };
   return grey_allOf(grey_kindOfClass([UIScrollView class]),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
+            descriptionBlock:describe],
                     nil);
 }
 
 + (id<GREYMatcher>)matcherForTextFieldValue:(NSString *)value {
-  MatchesBlock matches = ^BOOL(UITextField *textField) {
+  MatchesBlock matches = ^BOOL(UITextField *textField) {//by block inject dynamic item that needs compared
     return [textField.text isEqualToString:value];
   };
   DescribeToBlock describe = ^void(id<GREYDescription> description) {
     [description appendText:[NSString stringWithFormat:@"textFieldValue('%@')", value]];
   };
   return grey_allOf(grey_kindOfClass([UITextField class]),
-                    [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
-                                                         descriptionBlock:describe],
-                    nil);
+            [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matches
+            descriptionBlock:describe],
+            nil);
 }
-
 #pragma mark - Private
-
 /**
  * @return @c YES if the strings have the same string values, @c NO otherwise.
  */
@@ -679,10 +670,9 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
   if (firstString == secondString) {
     return YES;
   }
-
-  // Beginning in iOS 7, accessibility strings, including accessibilityLabel, accessibilityHint,
-  // and accessibilityValue, may be instances of NSAttributedString.  This allows the application
-  // developer to control aspects of the spoken output such as pitch and language.
+  // Beginning in iOS 7, accessibility strings, including accessibilityLabel, accessibilityHint, and accessibilityValue,
+  // may be instances of NSAttributedString.
+  // This allows the application developer to control aspects of the spoken output such as pitch and language.
   // NSAttributedString, however, does not inherit from NSString, so a check needs to be performed
   // so the underlying NSString value can be extracted for comparison.
   NSString *firstStringValue;
@@ -693,7 +683,6 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
   } else {
     return NO;
   }
-
   NSString *secondStringValue;
   if ([secondString isKindOfClass:[NSString class]]) {
     secondStringValue = secondString;
@@ -705,9 +694,11 @@ static const double kElementSufficientlyVisiblePercentage = 0.75;
 
   return [firstStringValue isEqualToString:secondStringValue];
 }
-
 @end
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 #if !(GREY_DISABLE_SHORTHAND)
 
 id<GREYMatcher> grey_keyWindow(void) {

@@ -61,7 +61,6 @@
 @end
 
 #if !(GREY_DISABLE_SHORTHAND)
-
 id<GREYMatcher> grey_allOf(id<GREYMatcher> first,
                            id<GREYMatcher> second,
                            id<GREYMatcher> thirdOrNil,
@@ -80,9 +79,8 @@ id<GREYMatcher> grey_allOf(id<GREYMatcher> first,
   va_end(args);
   return [[GREYAllOf alloc] initWithMatchers:matcherList];
 }
-
 id<GREYMatcher> grey_allOfMatchers(NSArray<GREYMatcher> *matchers) {
   return [[GREYAllOf alloc] initWithMatchers:matchers];
 }
-
 #endif // GREY_DISABLE_SHORTHAND
+

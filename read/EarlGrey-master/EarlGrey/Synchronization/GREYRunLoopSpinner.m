@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import "Synchronization/GREYRunLoopSpinner.h"
 #import "Additions/UIApplication+GREYAdditions.h"
 #import "Common/GREYFatalAsserts.h"
@@ -38,6 +37,9 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
   }
   return self;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMaxSleepInterval:(CFTimeInterval)maxSleepInterval {
     GREYFatalAssertWithMessage(maxSleepInterval >= 0,@"Maximum sleep interval must be non-negative.");
     _maxSleepInterval = maxSleepInterval;
@@ -46,26 +48,53 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
     GREYFatalAssertWithMessage(timeout >= 0, @"Timeout must be non-negative.");
     _timeout = timeout;
 }
-
 - (BOOL)spinWithStopConditionBlock:(BOOL (^)(void))stopConditionBlock {
     GREYFatalAssertWithMessage(!_spinning, @"Should not spin the same run loop spinner instance concurrently.");
-  _spinning = YES;
-  CFTimeInterval timeoutTime = CACurrentMediaTime() + _timeout;
-  [self grey_drainRunLoopInActiveModeForDrains:_minRunLoopDrains]; /////1  drain
-  BOOL stopConditionMet = [self grey_checkConditionInActiveMode:stopConditionBlock];////1
-  CFTimeInterval remainingTime = [self grey_secondsUntilTime:timeoutTime];//////2
-
-  while (!stopConditionMet && remainingTime > 0) {
-    @autoreleasepool {
-      stopConditionMet = [self grey_drainRunLoopInActiveModeAndCheckCondition:stopConditionBlock
-                                    forTime:remainingTime];//1+1  drain
-      remainingTime = [self grey_secondsUntilTime:timeoutTime];
+    _spinning = YES;
+    CFTimeInterval timeoutTime = CACurrentMediaTime() + _timeout;
+    
+    [self grey_drainRunLoopInActiveModeForDrains:_minRunLoopDrains]; /////2  drain
+    
+    BOOL stopConditionMet = [self grey_checkConditionInActiveMode:stopConditionBlock];////1
+    CFTimeInterval remainingTime = [self grey_secondsUntilTime:timeoutTime];//////2 sleep
+    while (!stopConditionMet && remainingTime > 0) {
+        @autoreleasepool {
+            stopConditionMet = [self grey_drainRunLoopInActiveModeAndCheckCondition:stopConditionBlock
+                                        forTime:remainingTime];//1+1  drain
+            remainingTime = [self grey_secondsUntilTime:timeoutTime];
+        }
     }
-  }
-  _spinning = NO;
-  return stopConditionMet;
+    _spinning = NO;
+    return stopConditionMet;
 }
-
+/** private  and why use CFRunIoopPerformBlock ?
+ *  Checks the stop condition block in the active mode
+ *  and invokes the condition met handler in the active mode
+ *  if it was evaluated to @c YES.
+ *  @param stopConditionBlock The condition block that should be evaluated in the active mode.
+ *  @return @c YES if the stop condition block evaluated to @YES; @c NO otherwise.
+ */
+- (BOOL)grey_checkConditionInActiveMode:(BOOL (^)())stopConditionBlock  {
+    __block BOOL conditionMet = NO;
+    __weak __typeof__(self) weakSelf = self;
+    NSString *activeMode = [self grey_activeRunLoopMode];
+    CFRunLoopPerformBlock(CFRunLoopGetCurrent(), (CFStringRef)activeMode, ^{
+        __typeof__(self) strongSelf = weakSelf;
+        GREYFatalAssertWithMessage(strongSelf, @"The spinner should not have been deallocated.");
+        if (stopConditionBlock()) {
+            void (^conditionMetHandler)(void) = [strongSelf conditionMetHandler];
+            if (conditionMetHandler) {
+                conditionMetHandler();
+            }
+            conditionMet = YES;
+        }
+    });
+    // Handles at most one souce in the active mode.
+    // All enqueued blocks are serviced ----
+    // before any sources are serviced.
+    CFRunLoopRunInMode((CFStringRef)activeMode, 0, true);
+    return conditionMet;
+}
 #pragma mark - Private
 /**
  *  Spins the run loop in the active mode for @c exitDrainCount drains.
@@ -86,14 +115,13 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
     // Never let the run loop sleep  while we are draining it for the minimum drains.
     CFRunLoopWakeUp(CFRunLoopGetCurrent());
   };
-    CFRunLoopRef
   // Drain the currently active mode in a while loop , so that we handle cases where the active mode finishes or is stopped.
   // In these cases, we want to keep draining the (possibly new) active mode for the remaining drains.
   while (drainCount < exitDrainCount) {
     @autoreleasepool {
       NSString *activeMode = [self grey_activeRunLoopMode];
-      CFRunLoopObserverRef drainCountingObserver = [self
-                      grey_setupObserverInMode:activeMode
+      CFRunLoopObserverRef drainCountingObserver =
+                [self grey_setupObserverInMode:activeMode
                       withBeforeSourcesBlock:drainCountingBlock///////////
                       beforeWaitingBlock:wakeUpBlock];/////////////
       CFRunLoopRunResult result = CFRunLoopRunInMode((CFStringRef)activeMode, DBL_MAX, false);//blocking call
@@ -177,33 +205,6 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
 
   return conditionMet;
 }
-/**
- *  Checks the stop condition block in the active mode
- *  and invokes the condition met handler in the active mode
- *  if it was evaluated to @c YES.
- *  @param stopConditionBlock The condition block that should be evaluated in the active mode.
- *  @return @c YES if the stop condition block evaluated to @YES; @c NO otherwise.
- */
-- (BOOL)grey_checkConditionInActiveMode:(BOOL (^)())stopConditionBlock  {
-  __block BOOL conditionMet = NO;
-  __weak __typeof__(self) weakSelf = self;
-  NSString *activeMode = [self grey_activeRunLoopMode];
-  CFRunLoopPerformBlock(CFRunLoopGetCurrent(), (CFStringRef)activeMode, ^{
-    __typeof__(self) strongSelf = weakSelf;
-    GREYFatalAssertWithMessage(strongSelf, @"The spinner should not have been deallocated.");
-    if (stopConditionBlock()) {
-      void (^conditionMetHandler)(void) = [strongSelf conditionMetHandler];
-      if (conditionMetHandler) {
-        conditionMetHandler();
-      }
-      conditionMet = YES;
-    }
-  });
-  // Handles at most one souce in the active mode. All enqueued blocks are serviced before any
-  // sources are serviced.
-  CFRunLoopRunInMode((CFStringRef)activeMode, 0, true);
-  return conditionMet;
-}
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -228,21 +229,19 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
   void (^observerBlock)(CFRunLoopObserverRef observer, CFRunLoopActivity activity) =
       ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
         if (activity & kCFRunLoopEntry) {
-          // When entering a run loop in @c mode, increment the nesting count.
-          numNestedRunLoopModes++;
+          numNestedRunLoopModes++;  // When entering a run loop in @c mode, increment the nesting count.
         } else if (activity & kCFRunLoopExit) {
-          // When exiting a run loop in @c mode, decrement the nesting count.
-          numNestedRunLoopModes--;
+          numNestedRunLoopModes--;  // When exiting a run loop in @c mode, decrement the nesting count.
         } else if (activity & kCFRunLoopBeforeSources) {
           // When this observer was created, the nesting count was 0. When we started running the
           // run loop in @c mode, the run loop entered @c mode and incremented the nesting count. So
           // now, the "unnested" nesting count is 1.
           if (numNestedRunLoopModes == 1) {
-            beforeSourcesBlock();
+            beforeSourcesBlock();////////////////////////////////
           }
         } else if (activity & kCFRunLoopBeforeWaiting) {
           if (numNestedRunLoopModes == 1) {
-            beforeWaitingBlock();
+            beforeWaitingBlock();////////////////////////////////
           }
         } else {
           GREYFatalAssertWithMessage(NO,
@@ -253,6 +252,7 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
                         @"The nesting count for |mode| should never be less than zero.");
       };
 
+//    CFOptionFlags, CFRunLoopActivity
   CFOptionFlags observerFlags = kCFRunLoopEntry | kCFRunLoopExit;
   if (beforeSourcesBlock) {
     observerFlags = observerFlags | kCFRunLoopBeforeSources;
@@ -263,39 +263,16 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
 
   // Order = LONG_MAX so it is serviced last after all other higher priority observers.
   // Let the other observers do their job before querying for idleness.
-  CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(NULL,
-                                                observerFlags,
-                                                true,
-                                                LONG_MAX,
-                                                observerBlock);
+  CFRunLoopObserverRef observer = CFRunLoopObserverCreateWithHandler(NULL, observerFlags, true,
+                                               LONG_MAX, observerBlock);
+//    CFAllocatorRef allocator,
+//    CFOptionFlags activities,
+//    Boolean repeats,
+//    CFIndex order,
+//    void (^block) (CFRunLoopObserverRef observer, CFRunLoopActivity activity)
   CFRunLoopAddObserver(CFRunLoopGetCurrent(), observer, (CFStringRef)mode);
   return observer;
 }
-/**
- *  Create and return a wake up timer in @c mode. Will not add a timer if @c maxSleepInterval is 0.
- *  The wake up timer will fire every @c maxSleepInterval to keep the run loop from sleeping more than @c maxSleepInterval while running in @c mode.
- *  @param mode The mode that the timer should be added to.
- *  @return The registered timer or @c nil if no timer was added to @c mode.
- */
-- (CFRunLoopTimerRef)grey_setupWakeUpTimerInMode:(NSString *)mode {
-  if (_maxSleepInterval > 0) {
-    CFRunLoopTimerRef timer =
-        CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault,
-                            CFAbsoluteTimeGetCurrent() + _maxSleepInterval,
-                            _maxSleepInterval,
-                            0,
-                            0,
-                            noopTimerHandler);
-    CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, (CFStringRef)mode);
-    return timer;
-  } else {
-    return NULL;
-  }
-}
-
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
 /**
  *  Remove @c observer from @c mode and then release it.
  *  @param observer --- The observer to be removed and released.
@@ -305,6 +282,43 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
     if (observer) {
         CFRunLoopRemoveObserver(CFRunLoopGetCurrent(), observer, (CFStringRef)mode);
         CFRelease(observer);
+    }
+}
+/**
+ *  @return The active mode for the current runloop.
+ */
+- (NSString *)grey_activeRunLoopMode {
+  NSString *activeRunLoopMode = [[UIApplication sharedApplication] grey_activeRunLoopMode];
+  if (!activeRunLoopMode) {
+    // If UIKit does not have any modes on its run loop stack, then consider the default
+    // run loop mode as the active mode. We do not use the current run loop mode because if this
+    // spinner is nested within another spinner, we could get stuck spinning the run loop in a
+    // mode that was active but shouldn't be anymore.
+    // TODO: Do better than just always using the default run loop mode.
+    activeRunLoopMode = NSDefaultRunLoopMode;
+  }
+  return activeRunLoopMode;
+}
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+/**
+ *  Create and return a wake up timer in @c mode. Will not add a timer if @c maxSleepInterval is 0.
+ *  The wake up timer will ---- fire every @c maxSleepInterval to keep the run loop
+ *      from --- sleeping more than @c maxSleepInterval ---- while running in @c mode.
+ *  @param mode The mode that the timer should be added to.
+ *  @return The registered timer or @c nil if no timer was added to @c mode.
+ */
+- (CFRunLoopTimerRef)grey_setupWakeUpTimerInMode:(NSString *)mode {
+    if (_maxSleepInterval > 0) {
+        CFRunLoopTimerRef timer = CFRunLoopTimerCreateWithHandler(kCFAllocatorDefault,
+                                            CFAbsoluteTimeGetCurrent() + _maxSleepInterval,
+                                            _maxSleepInterval, 0, 0, noopTimerHandler);
+        CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, (CFStringRef)mode);
+        return timer;
+    } else {
+        return NULL;
     }
 }
 /**
@@ -324,21 +338,6 @@ static void (^noopTimerHandler)(CFRunLoopTimerRef timer) = ^(CFRunLoopTimerRef t
  */
 - (CFTimeInterval)grey_secondsUntilTime:(CFTimeInterval)time {
     return time - CACurrentMediaTime();
-}
-/**
- *  @return The active mode for the current runloop.
- */
-- (NSString *)grey_activeRunLoopMode {
-  NSString *activeRunLoopMode = [[UIApplication sharedApplication] grey_activeRunLoopMode];
-  if (!activeRunLoopMode) {
-    // If UIKit does not have any modes on its run loop stack, then consider the default
-    // run loop mode as the active mode. We do not use the current run loop mode because if this
-    // spinner is nested within another spinner, we could get stuck spinning the run loop in a
-    // mode that was active but shouldn't be anymore.
-    // TODO: Do better than just always using the default run loop mode.
-    activeRunLoopMode = NSDefaultRunLoopMode;
-  }
-  return activeRunLoopMode;
 }
 @end
 

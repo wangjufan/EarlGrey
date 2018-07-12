@@ -19,11 +19,8 @@
  *  @brief Exposes GREYElementInteraction's interfaces and methods that are otherwise private for
  *  testing purposes.
  */
-
 #import <EarlGrey/GREYElementInteraction.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
 @interface GREYElementInteraction (Internal)
 /**
  *  Searches for UI elements within the root views
@@ -45,5 +42,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray *)matchedElementsWithTimeout:(NSTimeInterval)timeout
                             error:(__strong NSError **)error;
 @end
-
 NS_ASSUME_NONNULL_END
+

@@ -13,26 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <Foundation/Foundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A protocol that defines the layout of an object that conforms to GREYMatcher.
  */
 @protocol GREYDescription<NSObject>
-
 /**
  *  Appends the provided text to the GREYDescription.
- *
  *  @param text The text to be appended to the GREYDescription.
- *
  *  @return An instance of an object conforming to GREYDescription with the provided
  *          @c text appended to it.
  */
 - (id<GREYDescription>)appendText:(NSString *)text;
-
 /**
  *  Appends the description of the provided object to the GREYDescription.
  *
@@ -42,7 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
  *          object's description appended to it.
  */
 - (id<GREYDescription>)appendDescriptionOf:(id)object;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

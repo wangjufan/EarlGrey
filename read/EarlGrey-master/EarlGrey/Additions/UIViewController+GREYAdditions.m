@@ -66,9 +66,9 @@ static Class gCompatibilityVCClass;
     // Swizzle viewDidMoveToWindow:shouldAppearOrDisappear.
     SEL swizzledSel = @selector(greyswizzled_viewDidMoveToWindow:shouldAppearOrDisappear:);
     swizzleSuccess =
-        [swizzler swizzleClass:self
-         replaceInstanceMethod:@selector(viewDidMoveToWindow:shouldAppearOrDisappear:)
-                    withMethod:swizzledSel];
+    [swizzler swizzleClass:self
+replaceInstanceMethod:@selector(viewDidMoveToWindow:shouldAppearOrDisappear:)
+                withMethod:swizzledSel];
     GREYFatalAssertWithMessage(swizzleSuccess,
                                @"Cannot swizzle UIViewController viewDidMoveToWindow:"
                                @"shouldAppearOrDisappear:");

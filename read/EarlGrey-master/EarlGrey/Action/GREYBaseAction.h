@@ -15,11 +15,8 @@
 //
 
 #import <EarlGrey/GREYAction.h>
-
 @protocol GREYMatcher;
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A base class for all actions that incorporates commonalities
  *   between initialization parameters and constraint checking.
@@ -31,16 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 /**
  *  The designated initializer for a base action with the provided @c constraints.
- *
  *  @param name        The name of the GREYAction being performed.
- *
  *  @param constraints The constraints to be satisified by the element before the
  *                     action is performed.
- *
  *  @return An instance of GREYBaseAction, initialized with the @c constraints for it to check for.
  */
 - (instancetype)initWithName:(NSString *)name
-                 constraints:(id<GREYMatcher>)constraints NS_DESIGNATED_INITIALIZER;
+            constraints:(id<GREYMatcher>)constraints NS_DESIGNATED_INITIALIZER;
 /**
  *  A method that checks that @c element satisfies @c constraints this action was initialized with.
  *  Subclasses should call this method if they want to check for constraints in their perform:error:
@@ -56,7 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return @c YES if the constraints are satisfied on the element. @c NO otherwise.
  */
 - (BOOL)satisfiesConstraintsForElement:(id)element error:(__strong NSError **)errorOrNilPtr;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -29,6 +29,9 @@
   [self doesNotRecognizeSelector:_cmd];
   return NO;
 }
+- (void)describeTo:(id<GREYDescription>)description {
+    [self doesNotRecognizeSelector:_cmd];
+}
 
 - (BOOL)matches:(id)item describingMismatchTo:(id<GREYDescription>)mismatchDescription {
   BOOL matchResult = [self matches:item];
@@ -37,13 +40,8 @@
   }
   return matchResult;
 }
-
 - (void)describeMismatchOf:(id)item to:(id<GREYDescription>)mismatchDescription {
   [self describeTo:mismatchDescription];
-}
-
-- (void)describeTo:(id<GREYDescription>)description {
-  [self doesNotRecognizeSelector:_cmd];
 }
 
 - (instancetype)copyWithZone:(NSZone *)zone {

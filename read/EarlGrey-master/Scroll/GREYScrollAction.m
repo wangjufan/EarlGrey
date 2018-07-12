@@ -96,7 +96,6 @@ static const NSInteger kMinTouchPointsToDetectScrollResistance = 2;
 }
 
 #pragma mark - GREYAction
-
 - (BOOL)perform:(id)element error:(__strong NSError **)errorOrNil {
   if (![self satisfiesConstraintsForElement:element error:errorOrNil]) {
     return NO;
@@ -105,7 +104,6 @@ static const NSInteger kMinTouchPointsToDetectScrollResistance = 2;
   if ([element isKindOfClass:[UIWebView class]]) {
     element = [(UIWebView *)element scrollView];
   }
-
   CGFloat amountRemaining = _amount;
   BOOL success = YES;
   while (amountRemaining > 0 && success) {
@@ -136,20 +134,15 @@ static const NSInteger kMinTouchPointsToDetectScrollResistance = 2;
   }
   return success;
 }
-
 #pragma mark - Private
-
 /**
  *  Injects the touch path into the given @c scrollView until the content edge could be reached.
- *
  *  @param touchPath  The touch path to be injected.
  *  @param scrollView The UIScrollView for the injection.
- *
  *  @return @c YES if entire touchPath was injected, else @c NO.
  */
 + (BOOL)grey_injectTouchPath:(NSArray *)touchPath onScrollView:(UIScrollView *)scrollView {
   GREYFatalAssert([touchPath count] >= 1);
-
   // In scrollviews that have their bounce turned off the horizontal and vertical velocities are not
   // reliable for detecting scroll resistance because they report non-zero velocities even when
   // content edge has been reached. So we are using contentOffsets as a workaround. But note that
@@ -202,5 +195,5 @@ static const NSInteger kMinTouchPointsToDetectScrollResistance = 2;
   }
   return !hasResistance;
 }
-
 @end
+

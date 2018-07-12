@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0098)https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-308/IOHIDFamily/IOHIDEvent.h.auto.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>IOHIDEvent.h</title>
+<style type="text/css">
+.enscript-comment { font-style: italic; color: rgb(178,34,34); }
+.enscript-function-name { font-weight: bold; color: rgb(0,0,255); }
+.enscript-variable-name { font-weight: bold; color: rgb(184,134,11); }
+.enscript-keyword { font-weight: bold; color: rgb(160,32,240); }
+.enscript-reference { font-weight: bold; color: rgb(95,158,160); }
+.enscript-string { font-weight: bold; color: rgb(188,143,143); }
+.enscript-builtin { font-weight: bold; color: rgb(218,112,214); }
+.enscript-type { font-weight: bold; color: rgb(34,139,34); }
+.enscript-highlight { text-decoration: underline; color: 0; }
+</style>
+</head>
+<body id="top">
+<h1 style="margin:8px;" id="f1">IOHIDEvent.h&nbsp;&nbsp;&nbsp;<span style="font-weight: normal; font-size: 0.5em;">[<a href="https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-308/IOHIDFamily/IOHIDEvent.h">plain text</a>]</span></h1>
+<hr>
+<div></div>
+<pre><span class="enscript-comment">/*
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ * 
+ * Copyright (c) 1999-2003 Apple Computer, Inc.  All Rights Reserved.
+ * 
+ * This file contains Original Code and/or Modifications of Original Code
+ * as defined in and that are subject to the Apple Public Source License
+ * Version 2.0 (the 'License'). You may not use this file except in
+ * compliance with the License. Please obtain a copy of the License at
+ * <a href="http://www.opensource.apple.com/apsl/">http://www.opensource.apple.com/apsl/</a> and read it before using this
+ * file.
+ * 
+ * The Original Code and all software distributed under the License are
+ * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+ * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
+ * Please see the License for the specific language governing rights and
+ * limitations under the License.
+ * 
+ * @APPLE_LICENSE_HEADER_END@
+ */</span>
+#<span class="enscript-reference">ifndef</span> <span class="enscript-variable-name">_IOKIT_IOHIDEVENT_H</span>
+#<span class="enscript-reference">define</span> <span class="enscript-variable-name">_IOKIT_IOHIDEVENT_H</span>
+
+#<span class="enscript-reference">include</span> <span class="enscript-string">&lt;libkern/c++/OSObject.h&gt;</span>
+#<span class="enscript-reference">include</span> <span class="enscript-string">&lt;libkern/c++/OSArray.h&gt;</span>
+#<span class="enscript-reference">include</span> <span class="enscript-string">&lt;IOKit/IOTypes.h&gt;</span>
+#<span class="enscript-reference">include</span> <span class="enscript-string">&lt;IOKit/hid/IOHIDEventTypes.h&gt;</span>
+#<span class="enscript-reference">include</span> <span class="enscript-string">&lt;IOKit/hidsystem/IOLLEvent.h&gt;</span>
+
+<span class="enscript-type">typedef</span> <span class="enscript-type">struct</span> IOHIDEventData IOHIDEventData;
+
+class IOHIDEvent: public OSObject
+{
+    OSDeclareAbstractStructors( IOHIDEvent )
+    
+    IOHIDEventData *    _data;
+    OSArray *           _children;
+    IOHIDEvent *        _parent;
+    size_t              _capacity;
+    AbsoluteTime        _timeStamp;
+    uint32_t            _typeMask;
+    IOOptionBits        _options;
+    UInt32              _eventCount;
+
+    bool initWithCapacity(IOByteCount capacity);
+    bool initWithType(IOHIDEventType type);
+    bool initWithTypeTimeStamp(IOHIDEventType type, AbsoluteTime timeStamp, IOOptionBits options = 0);
+    IOByteCount getLength(UInt32 * eventCount);
+    IOByteCount appendBytes(UInt8 * bytes, IOByteCount withLength);
+    
+    <span class="enscript-type">static</span> IOHIDEvent * _axisEvent (    IOHIDEventType          type,
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 x,
+                                        IOFixed                 y,
+                                        IOFixed                 z,
+                                        IOOptionBits            options = 0);
+    
+<span class="enscript-reference">public</span>:
+    <span class="enscript-type">static</span> IOHIDEvent *     withBytes(      <span class="enscript-type">const</span> <span class="enscript-type">void</span> *            bytes,
+                                        IOByteCount             size);
+
+    <span class="enscript-type">static</span> IOHIDEvent *     withType(       IOHIDEventType          type    = kIOHIDEventTypeNULL,
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     withEventData (
+                                        AbsoluteTime            timeStamp, 
+                                        UInt32                  type,
+                                        NXEventData *           data, 
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     keyboardEvent(  
+                                        AbsoluteTime            timeStamp, 
+                                        UInt32                  usagePage,
+                                        UInt32                  usage,
+                                        Boolean                 down,
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     translationEvent (
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 x,
+                                        IOFixed                 y,
+                                        IOFixed                 z,
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     scrollEvent (
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 x,
+                                        IOFixed                 y,
+                                        IOFixed                 z,
+                                        IOOptionBits            options = 0);
+ 
+    <span class="enscript-type">static</span> IOHIDEvent *     zoomEvent (
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 x,
+                                        IOFixed                 y,
+                                        IOFixed                 z,
+                                        IOOptionBits            options = 0);
+                                       
+    <span class="enscript-type">static</span> IOHIDEvent *     accelerometerEvent (
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 x,
+                                        IOFixed                 y,
+                                        IOFixed                 z,
+                                        IOHIDAccelerometerType  type = 0,
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     buttonEvent (
+                                        AbsoluteTime            timeStamp,
+                                        UInt32                  buttonMask,
+                                        IOOptionBits            options = 0);
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     buttonEvent (
+                                        AbsoluteTime            timeStamp,
+                                        UInt32                  buttonMask,
+                                        IOFixed                 pressure,
+                                        IOOptionBits            options = 0);    
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     ambientLightSensorEvent (
+                                        AbsoluteTime            timeStamp,
+                                        UInt32                  level,
+                                        UInt32                  channel0    = 0,
+                                        UInt32                  channel1    = 0,
+                                        IOOptionBits            options     = 0);
+                                        
+                                        
+    <span class="enscript-type">static</span> IOHIDEvent *     temperatureEvent (
+                                        AbsoluteTime            timeStamp,
+                                        IOFixed                 temperature,
+                                        IOOptionBits            options     = 0);
+
+    virtual AbsoluteTime    getTimeStamp();
+    virtual <span class="enscript-type">void</span>            setTimeStamp(AbsoluteTime timeStamp);
+    
+    virtual IOHIDEventType  getType();
+    virtual <span class="enscript-type">void</span>            setType(IOHIDEventType type);
+    
+    virtual IOHIDEvent *    getEvent(   IOHIDEventType          type, 
+                                        IOOptionBits            options = 0);
+    
+    virtual SInt32          getIntegerValue(
+                                        IOHIDEventField         key, 
+                                        IOOptionBits            options = 0);
+    virtual <span class="enscript-type">void</span>            setIntegerValue(    
+                                        IOHIDEventField         key, 
+                                        SInt32                  value, 
+                                        IOOptionBits            options = 0);
+                                        
+    virtual IOFixed         getFixedValue(IOHIDEventField       key,
+                                        IOOptionBits            options = 0);
+    virtual <span class="enscript-type">void</span>            setFixedValue(
+                                        IOHIDEventField         key, 
+                                        IOFixed                 value,
+                                        IOOptionBits            options = 0);
+
+    virtual <span class="enscript-type">void</span> free();
+    
+    virtual size_t getLength(); 
+    virtual IOByteCount readBytes(<span class="enscript-type">void</span> * bytes, IOByteCount withLength);
+
+};
+
+#<span class="enscript-reference">endif</span> <span class="enscript-comment">/* _IOKIT_IOHIDEVENT_H */</span>
+</pre>
+<hr>
+</body></html>

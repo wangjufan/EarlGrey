@@ -441,19 +441,14 @@ GREY_EXPORT id<GREYMatcher> grey_keyWindow(void);
 
 /** Shorthand for GREYMatchers::matcherForAccessibilityLabel:. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityLabel(NSString *label);
-
 /** Shorthand for GREYMatchers::matcherForAccessibilityID:. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityID(NSString *accessibilityID);
-
 /** Shorthand for GREYMatchers::matcherForAccessibilityValue:. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityValue(NSString *grey_accessibilityValue);
-
 /** Shorthand for GREYMatchers::matcherForAccessibilityTraits:. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityTrait(UIAccessibilityTraits traits);
-
 /** Shorthand for GREYMatchers::matcherForAccessibilityElementIsFocused. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityFocused(void);
-
 /** Shorthand for GREYMatchers::matcherForAccessibilityHint:. */
 GREY_EXPORT id<GREYMatcher> grey_accessibilityHint(NSString *hint);
 
@@ -495,7 +490,6 @@ GREY_EXPORT id<GREYMatcher> grey_conformsToProtocol(Protocol *protocol);
 
 /** Shorthand for GREYMatchers::matcherForAncestor:. */
 GREY_EXPORT id<GREYMatcher> grey_ancestor(id<GREYMatcher> ancestorMatcher);
-
 /** Shorthand for GREYMatchers::matcherForDescendant:. */
 GREY_EXPORT id<GREYMatcher> grey_descendant(id<GREYMatcher> descendantMatcher);
 
@@ -520,20 +514,17 @@ GREY_EXPORT id<GREYMatcher> grey_pickerColumnSetToValue(NSInteger column,
 
 /** Shorthand for GREYMatchers::matcherForEnabledElement. */
 GREY_EXPORT id<GREYMatcher> grey_enabled(void);
-
 /** Shorthand for GREYMatchers::matcherForSelectedElement. */
 GREY_EXPORT id<GREYMatcher> grey_selected(void);
-
 /** Shorthand for GREYMatchers::matcherForUserInteractionEnabled. */
 GREY_EXPORT id<GREYMatcher> grey_userInteractionEnabled(void);
 
 /** Shorthand for GREYMatchers::matcherForConstraints:toReferenceElementMatching:. */
 GREY_EXPORT id<GREYMatcher> grey_layout(NSArray *constraints,
-                                        id<GREYMatcher> referenceElementMatcher);
+                                id<GREYMatcher> referenceElementMatcher);
 
 /** Shorthand for GREYMatchers::matcherForNil. */
 GREY_EXPORT id<GREYMatcher> grey_nil(void);
-
 /** Shorthand for GREYMatchers::matcherForNotNil. */
 GREY_EXPORT id<GREYMatcher> grey_notNil(void);
 
@@ -548,16 +539,13 @@ GREY_EXPORT id<GREYMatcher> grey_anything(void);
 
 /** Shorthand for GREYMatchers::matcherForEqualTo:. */
 GREY_EXPORT id<GREYMatcher> grey_equalTo(id value);
-
 /** Shorthand for GREYMatchers::matcherForLessThan:. */
 GREY_EXPORT id<GREYMatcher> grey_lessThan(id value);
-
 /** Shorthand for GREYMatchers::matcherForGreaterThan:. */
 GREY_EXPORT id<GREYMatcher> grey_greaterThan(id value);
 
 /** Shorthand for GREYMatchers::matcherForScrolledToContentEdge:. */
 GREY_EXPORT id<GREYMatcher> grey_scrolledToContentEdge(GREYContentEdge edge);
-
 /** Shorthand for GREYMatchers::matcherForTextFieldValue:. */
 GREY_EXPORT id<GREYMatcher> grey_textFieldValue(NSString *value);
 

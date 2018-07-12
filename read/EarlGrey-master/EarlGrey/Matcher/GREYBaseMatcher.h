@@ -13,13 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <Foundation/Foundation.h>
-
 #import <EarlGrey/GREYMatcher.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A base class that implements the GREYMatcher protocol methods.
  *  Prefer subclassing this class over creating your own matchers.
@@ -27,23 +23,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  and GREYBaseMatcher::describeTo: methods.
  */
 @interface GREYBaseMatcher : NSObject<GREYMatcher, NSCopying>
-
 #pragma mark - GREYMatcher
-
 /**
  *  @see GREYMatcher::matches:
  *
  *  @remark Subclasses are required to implement this method.
  */
 - (BOOL)matches:(_Nullable id)item;
-
 /**
  *  @see GREYMatcher::describeTo:
  *
  *  @remark Subclasses are required to implement this method.
  */
 - (void)describeTo:(id<GREYDescription>)description;
-
 @end
-
 NS_ASSUME_NONNULL_END

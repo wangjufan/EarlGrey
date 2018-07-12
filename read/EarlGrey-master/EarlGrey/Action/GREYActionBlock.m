@@ -13,17 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import "Action/GREYActionBlock.h"
-
 #import "Common/GREYDefines.h"
 #import "Common/GREYThrowDefines.h"
 #import "Matcher/GREYMatcher.h"
-
 @implementation GREYActionBlock {
   GREYPerformBlock _performBlock;
 }
-
 + (instancetype)actionWithName:(NSString *)name performBlock:(GREYPerformBlock)block {
   return [GREYActionBlock actionWithName:name constraints:nil performBlock:block];
 }
@@ -51,6 +47,5 @@
   // Perform actual action.
   return _performBlock(element, errorOrNil);
 }
-
 @end
 

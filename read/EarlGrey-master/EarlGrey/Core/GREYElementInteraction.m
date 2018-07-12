@@ -209,19 +209,18 @@
   @autoreleasepool {
     NSError *executorError;
     __block NSError *actionError = nil;
-
     // Create the user info dictionary for any notificatons and set it up with the action.
     NSMutableDictionary *actionUserInfo = [[NSMutableDictionary alloc] init];
     [actionUserInfo setObject:action forKey:kGREYActionUserInfoKey];
     NSNotificationCenter *defaultNotificationCenter = [NSNotificationCenter defaultCenter];
-
     CFTimeInterval interactionTimeout =
         GREY_CONFIG_DOUBLE(kGREYConfigKeyInteractionTimeoutDuration);
-
     // Assign a flag that provides info if the interaction being performed failed.
     __block BOOL interactionFailed = NO;
     __weak __typeof__(self) weakSelf = self;
-
+      
+      ////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////
     GREYExecBlock actionExecBlock = ^{
       __typeof__(self) strongSelf = weakSelf;
       GREYFatalAssertWithMessage(strongSelf, @"Must not be nil");
@@ -230,7 +229,7 @@
       // an element not being found.
       NSError *elementNotFoundError = nil;
       NSArray *elements = [strongSelf matchedElementsWithTimeout:interactionTimeout
-                                                           error:&elementNotFoundError];
+                                            error:&elementNotFoundError];
       id element = nil;
       if (elements) {
         // Get the uniquely matched element. If this is nil, then it means that there has been
@@ -280,19 +279,18 @@
                           userProvidedOutError:nil];
       }
     };
-
+      ////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////
     BOOL executionSucceeded =
         [[GREYUIThreadExecutor sharedInstance] executeSyncWithTimeout:interactionTimeout
-                                                                block:actionExecBlock
-                                                                error:&executorError];
-
+                                        block:actionExecBlock
+                                        error:&executorError];
     // Failure to execute due to timeout should be represented as interaction timeout.
     if (!executionSucceeded) {
       if ([executorError.domain isEqualToString:kGREYUIThreadExecutorErrorDomain] &&
           executorError.code == kGREYUIThreadExecutorTimeoutErrorCode) {
         NSString *actionTimeoutDesc =
-            [NSString stringWithFormat:@"Failed to perform action within %g seconds.",
-             interactionTimeout];
+            [NSString stringWithFormat:@"Failed to perform action within %g seconds.", interactionTimeout];
         actionError = GREYNestedErrorMake(kGREYInteractionErrorDomain,
                                           kGREYInteractionTimeoutErrorCode,
                                           actionTimeoutDesc,
@@ -305,8 +303,8 @@
     BOOL actionFailed = !executionSucceeded || interactionFailed;
     if (actionFailed) {
       [self grey_handleFailureOfAction:action
-                           actionError:actionError
-                  userProvidedOutError:errorOrNil];
+                   actionError:actionError
+            userProvidedOutError:errorOrNil];
     }
     // Drain once to update idling resources and redraw the screen.
     [[GREYUIThreadExecutor sharedInstance] drainOnce];
@@ -721,14 +719,12 @@
 
 /**
  *  Handles failure of an @c assertion.
- *
  *  @param assertion              The asserion that failed.
  *  @param assertionError         Contains the reason for the failure.
  *  @param[out] userProvidedError Error (or @c nil) provided by the user. When @c nil, an exception
  *                                is thrown to halt further execution of the test case.
  *  @throws NSException to denote an assertion failure, thrown if the @c userProvidedError
  *          is @c nil on test failure.
- *
  *  @return Junk boolean value to suppress xcode warning to have "a non-void return
  *          value to indicate an error occurred"
  */

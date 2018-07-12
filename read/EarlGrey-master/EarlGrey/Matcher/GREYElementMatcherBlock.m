@@ -13,26 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import "Matcher/GREYElementMatcherBlock.h"
-
 #import "Common/GREYDefines.h"
 #import "Common/GREYThrowDefines.h"
-
 // Base matcher which takes block parameters that implement |matches| and |describeTo|.
 @implementation GREYElementMatcherBlock
-
 + (instancetype)matcherWithMatchesBlock:(MatchesBlock)matchBlock
                        descriptionBlock:(DescribeToBlock)describeBlock {
   return [[GREYElementMatcherBlock alloc] initWithMatchesBlock:matchBlock
                                               descriptionBlock:describeBlock];
 }
-
 - (instancetype)initWithMatchesBlock:(MatchesBlock)matchBlock
                     descriptionBlock:(DescribeToBlock)describeBlock {
   GREYThrowOnNilParameter(matchBlock);
   GREYThrowOnNilParameter(describeBlock);
-
   self = [super init];
   if (self) {
     _matcherBlock = matchBlock;
@@ -40,13 +34,10 @@
   }
   return self;
 }
-
 - (BOOL)matches:(id)item {
   return _matcherBlock(item);
 }
-
 - (void)describeTo:(id<GREYDescription>)description {
   _descriptionBlock(description);
 }
-
 @end

@@ -13,18 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <EarlGrey/GREYMatcher.h>
-
 NS_ASSUME_NONNULL_BEGIN
-
 /**
  *  A class to transform an OCHamcrest matcher and into a GREYMatcher instance.
  *  Since EarlGrey requires its matchers to conform to the GREYMatcher protocol, this class provides
  *  a convinient way to represent OCHamcrest matchers as GREYMatchers.
  */
 @interface GREYHCMatcher : NSObject<GREYMatcher>
-
 /**
  *  This method takes in a matcher object conforming to HCMatcher protocol and returns an object
  *  conforming to the GREYMatcher protocol.
@@ -35,7 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
  *          as the matcher.
  */
 - (instancetype)initWithHCMatcher:(id)HCMatcher;
-
 @end
-
 NS_ASSUME_NONNULL_END
+

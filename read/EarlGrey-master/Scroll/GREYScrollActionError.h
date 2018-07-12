@@ -13,16 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
 #import <Foundation/Foundation.h>
-
 #import <EarlGrey/GREYDefines.h>
-
 /**
  *  The Error domain for a scroll error.
  */
 GREY_EXTERN NSString *const kGREYScrollErrorDomain;
-
 /**
  *  Error codes for scrolling related errors.
  */
