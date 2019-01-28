@@ -27,44 +27,42 @@
 #import "Common/GREYFatalAsserts.h"
 #import "Common/GREYSwizzler.h"
 
+// All signals that we want to handle.
+static const int gSignals[] = {
+    SIGQUIT,
+    SIGILL,
+    SIGTRAP,
+    SIGABRT,
+    SIGFPE,
+    SIGBUS,
+    SIGSEGV,
+    SIGSYS,
+};
+
 // Exception handler that was previously installed before we replaced it with our own.
 static NSUncaughtExceptionHandler *gPreviousUncaughtExceptionHandler;
 
 // Normal signal handler.
 typedef void (*SignalHandler)(int signum);
-
 // When SA_SIGINFO is set, it is an extended signal handler.
 typedef void (*SignalHandlerEX)(int signum, struct __siginfo *siginfo, void *context);
-
-// All signals that we want to handle.
-static const int gSignals[] = {
-  SIGQUIT,
-  SIGILL,
-  SIGTRAP,
-  SIGABRT,
-  SIGFPE,
-  SIGBUS,
-  SIGSEGV,
-  SIGSYS,
-};
-
-// Total number of signals we handle.
-static const int kNumSignals = sizeof(gSignals) / sizeof(gSignals[0]);
-
 // A union of normal and extended signal handler.
 typedef union GREYSignalHandlerUnion {
   SignalHandler signalHandler;
   SignalHandlerEX signalHandlerExtended;
 } GREYSignalHandlerUnion;
-
 // Saved signal handler with a bit indicating extended or normal handler signature.
 typedef struct GREYSignalHandler {
   GREYSignalHandlerUnion handler;
   bool extended;
 } GREYSignalHandler;
 
+
+// Total number of signals we handlex
+static const int kNumSignals = sizeof(gSignals) / sizeof(gSignals[0]);
 // All previous signal handlers we replaced with our own.
 static GREYSignalHandler gPreviousSignalHandlers[kNumSignals];
+
 
 #pragma mark - Accessibility On Device
 
@@ -348,9 +346,9 @@ static void grey_uncaughtExceptionHandler(NSException *exception) {
 
   for (size_t i = 0; i < kNumSignals; i++) {
     int signum = gSignals[i];
+      
     struct sigaction previousSigAction;
     memset(&previousSigAction, 0, sizeof(previousSigAction));
-
     GREYSignalHandler *previousSignalHandler = &gPreviousSignalHandlers[i];
     memset(previousSignalHandler, 0, sizeof(gPreviousSignalHandlers[0]));
 
